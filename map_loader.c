@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/01 05:57:12 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/06 19:39:55 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void	free_map(t_map *map)
 			free(map->c);
 		map->r = NULL;
 		map->c = NULL;
+		free(map);
 	}
-	free(map);
 }
 
-static void	set_variants(t_map *map)
+static bool	prevalidate_set_variants(t_map *map)
 {
 	unsigned int	x;
 	unsigned int	y;
@@ -58,8 +58,11 @@ static void	set_variants(t_map *map)
 				if (y + 1 < map->height && map->c[y + 1][x].t == C_WALL)
 					map->c[y][x].v = ft_bit_set(map->c[y][x].v, V_SOUTH);
 			}
+			else if (!x || x == map->width - 1 || !y || y == map->height - 1)
+				return (false);
 		}
 	}
+	return (true);
 }
 
 static const t_cell_type	g_type_table[0xFF] = {\
@@ -135,8 +138,9 @@ int	load_map(t_ctx *ctx)
 	close(fd);
 	if (parse_types(ctx->map, 0) < 0)
 		return (free_map(ctx->map), -1);
-	if (!ctx->map->start.x || !ctx->map->collectibles || !ctx->map->has_exit)
+	if (!prevalidate_set_variants(ctx->map))
 		return (free_map(ctx->map), -1);
-	set_variants(ctx->map);
+	if (!map_is_valid(ctx->map))
+		return (free_map(ctx->map), -1);
 	return (0);
 }

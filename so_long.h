@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/03 19:58:15 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/06 19:40:56 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_map
 	t_coords		start;
 	unsigned int	collectibles;
 	bool			has_exit;
+	bool			**mem;
 }	t_map;
 
 typedef struct s_args
@@ -132,6 +133,9 @@ typedef struct s_ctx
 // map_loader.c
 void			free_map(t_map *map);
 int				load_map(t_ctx *fdf);
+
+// map_utils.c
+bool			map_is_valid(t_map *map);
 
 // asset_loader.c
 int				load_assets(t_ctx *ctx);
