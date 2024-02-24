@@ -6,38 +6,18 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/03 21:13:17 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/24 19:58:21 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-/*static void	free_assets(t_ctx *ctx)
-{
-	int			frame;
-	t_cell_type	type;
-	int			variant;
-
-	frame = 3;
-	while (frame--)
-	{
-		type = 0;
-		while (type++ < C_MAXTYPE)
-		{
-			variant = 16;
-			while (variant--)
-				if (ctx->assets[frame][type].img[variant])
-					mlx_delete_image(ctx->mlx,
-						ctx->assets[frame][type].img[variant]);
-		}
-	}
-	ft_bzero(ctx->assets, sizeof(t_asset[3][C_MAXTYPE]));
-}*/
-
 static const t_asset	g_asset_meta[C_MAXTYPE] = {\
-	[C_WALL] = {{{"wall", {0x293141FF}}}, true}, \
-	[C_COLLECTIBLE] = {{{"key", {0xede285FF}}}, false}, \
-	[C_EXIT] = {{{"door", {0xe5533bFF}}}, false}, \
+	[C_WALL] = {{{"wall", {0x293141FF}}}, false, true}, \
+	[C_COLLECTIBLE] = {{{"key", {0xede285FF}}}, false, false}, \
+	[C_EXIT] = {{{"door", {0xe5533bFF}}}, false, false}, \
+	[C_PLAYER] = {{{"baba", {0xFFFFFFFF}}}, true, true}, \
+	[C_ENEMY] = {{{"bee", {0xe5533bFF}}}, true, false}, \
 };
 
 static int	get_path(char path[100], t_cell_type type, int variant, int frame)
@@ -90,30 +70,46 @@ static void	recolor_texture(mlx_texture_t *tex, t_col col)
 	}
 }
 
-static int	load_asset(t_ctx *ctx, t_cell_type type, int frame)
+static int	load_variant(t_ctx *ctx, t_cell_type type, int frame, int variant)
 {
 	char			path[100];
-	int				variant;
 	mlx_texture_t	*texture;
 	mlx_image_t		*image;
 
-	variant = 1;
-	if (g_asset_meta[type].has_variants)
-		variant = 16;
-	ctx->assets[frame][type].has_variants = g_asset_meta[type].has_variants;
-	while (variant--)
+	if (get_path(path, type, variant, frame + 1) < 0)
+		return (-1);
+	texture = mlx_load_png(path);
+	if (texture == NULL)
+		return (-1);
+	recolor_texture(texture, g_asset_meta[type].s_meta.color);
+	image = mlx_texture_to_image(ctx->mlx, texture);
+	mlx_resize_image(image, image->width * 2, image->height * 2);
+	ctx->assets[frame][type].img[variant] = image;
+	mlx_delete_texture(texture);
+	if (!ctx->assets[frame][type].img[variant])
+		return (-1);
+	return (0);
+}
+
+static int	load_asset(t_ctx *ctx, t_cell_type type, int frame)
+{
+	int				variant;
+	bool			is_entity;
+	bool			has_variants;
+
+	is_entity = g_asset_meta[type].is_entity;
+	has_variants = g_asset_meta[type].has_variants;
+	ctx->assets[frame][type].is_entity = is_entity;
+	ctx->assets[frame][type].has_variants = has_variants;
+	variant = -1;
+	while (++variant < 32)
 	{
-		if (get_path(path, type, variant, frame + 1) < 0)
-			return (-1);
-		texture = mlx_load_png(path);
-		if (texture == NULL)
-			return (-1);
-		recolor_texture(texture, g_asset_meta[type].s_meta.color);
-		image = mlx_texture_to_image(ctx->mlx, texture);
-		mlx_resize_image(image, image->width * 2, image->height * 2);
-		ctx->assets[frame][type].img[variant] = image;
-		mlx_delete_texture(texture);
-		if (!ctx->assets[frame][type].img[variant])
+		if ((is_entity && has_variants && variant % 8 >= 4) \
+		|| (is_entity && !has_variants && variant % 8 >= 1) \
+		|| (!is_entity && has_variants && variant >= 16) \
+		|| (!is_entity && !has_variants && variant >= 1))
+			continue ;
+		if (load_variant(ctx, type, frame, variant) < 0)
 			return (-1);
 	}
 	return (0);
@@ -126,9 +122,11 @@ int	load_assets(t_ctx *ctx)
 	frame = 3;
 	while (frame--)
 	{
-		if (load_asset(ctx, C_WALL, frame) < 0
-			|| load_asset(ctx, C_COLLECTIBLE, frame) < 0
-			|| load_asset(ctx, C_EXIT, frame) < 0)
+		if (load_asset(ctx, C_WALL, frame) < 0 \
+		|| load_asset(ctx, C_COLLECTIBLE, frame) < 0 \
+		|| load_asset(ctx, C_EXIT, frame) < 0 \
+		|| load_asset(ctx, C_PLAYER, frame) < 0 \
+		|| load_asset(ctx, C_ENEMY, frame) < 0)
 			return (-1);
 	}
 	return (0);

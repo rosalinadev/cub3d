@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/06 19:40:56 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/24 18:39:41 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef enum e_cell_type
 	C_COLLECTIBLE,
 	C_EXIT,
 	C_PLAYER,
+	C_ENEMY,
 	C_MAXTYPE
 }	t_cell_type;
 
@@ -102,8 +103,9 @@ typedef struct s_asset
 			char	*name;
 			t_col	color;
 		}			s_meta;
-		mlx_image_t	*img[16];
+		mlx_image_t	*img[32];
 	};
+	bool		is_entity;
 	bool		has_variants;
 }	t_asset;
 

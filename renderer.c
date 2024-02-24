@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 18:59:35 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/03 19:58:21 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/24 19:58:00 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ int	draw_static(t_ctx *ctx)
 		c.x = ctx->map->width;
 		while (c.x--)
 		{
-			if (draw_cell(ctx, c, C_WALL) < 0
-				|| draw_cell(ctx, c, C_COLLECTIBLE) < 0
-				|| draw_cell(ctx, c, C_EXIT) < 0)
+			if (draw_cell(ctx, c, C_WALL) < 0 \
+			|| draw_cell(ctx, c, C_COLLECTIBLE) < 0 \
+			|| draw_cell(ctx, c, C_EXIT) < 0)
 				return (-1);
 		}
 	}

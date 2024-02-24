@@ -6,15 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/03 21:06:13 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/24 19:59:32 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-#define WIDTH 1024
-#define HEIGHT 768
-#define START_FULLSCREEN true
 
 static int	parse_args(t_ctx *ctx, int argc, char *argv[])
 {

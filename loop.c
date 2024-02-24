@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/03 22:55:37 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/24 20:02:48 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,20 @@ static void	set_frame(t_asset *asset, bool enabled)
 {
 	unsigned char	variant;
 
-	variant = 1;
-	if (asset->has_variants)
-		variant = 16;
-	while (variant--)
+	variant = -1;
+	while (++variant < 32)
+	{
+		if ((asset->is_entity && asset->has_variants && variant % 8 >= 4) \
+		|| (asset->is_entity && !asset->has_variants && variant % 8 >= 1) \
+		|| (!asset->is_entity && asset->has_variants && variant >= 16) \
+		|| (!asset->is_entity && !asset->has_variants && variant >= 1))
+			continue ;
 		if (asset->img[variant])
 			asset->img[variant]->enabled = enabled;
+	}
 }
 
-void	update_frame(t_ctx *ctx, double time)
+static void	update_frame(t_ctx *ctx, double time)
 {
 	static double			last_time = 0;
 	static unsigned char	frame = 0;
