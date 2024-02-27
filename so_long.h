@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/24 18:39:41 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/27 15:52:50 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,15 @@ typedef struct s_cell
 {
 	t_cell_type	t;
 	t_variants	v;
+	int			i[3];
 }	t_cell;
+
+typedef struct s_entity
+{
+	t_coords	c;
+	t_cell_type	t;
+	int			i[3][32];
+}	t_entity;
 
 typedef struct s_map
 {
@@ -81,16 +89,14 @@ typedef struct s_map
 	t_cell			**c;
 	unsigned int	width;
 	unsigned int	height;
-	t_coords		start;
 	unsigned int	collectibles;
+	unsigned int	num_entities;
+	t_entity		*entities;
+	t_entity		*player;
+	bool			has_player;
 	bool			has_exit;
 	bool			**mem;
 }	t_map;
-
-typedef struct s_args
-{
-	char	*map_path;
-}	t_args;
 
 # define CSIZE 48
 
@@ -121,14 +127,13 @@ typedef enum e_flag
 
 typedef struct s_ctx
 {
+	char		*path;
 	mlx_t		*mlx;
 	mlx_image_t	*bg;
 	t_map		*map;
-	t_args		args;
 	t_asset		assets[3][C_MAXTYPE];
 	int			width;
 	int			height;
-	int			maxsteps;
 	t_flags		flags;
 }	t_ctx;
 
@@ -142,6 +147,9 @@ bool			map_is_valid(t_map *map);
 // asset_loader.c
 int				load_assets(t_ctx *ctx);
 
+// entities.c
+bool			init_entities(t_map *map, t_coords c, unsigned int depth);
+
 // hooks.c
 void			ft_hook_key(mlx_key_data_t keydata, void *param);
 
@@ -149,6 +157,7 @@ void			ft_hook_key(mlx_key_data_t keydata, void *param);
 void			ft_hook_loop(void *param);
 
 // renderer.c
-int				draw_static(t_ctx *ctx);
+int				draw_map(t_ctx *ctx);
+int				draw_entities(t_ctx *ctx);
 
 #endif

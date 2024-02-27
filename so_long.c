@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/24 19:59:32 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/27 15:53:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static int	parse_args(t_ctx *ctx, int argc, char *argv[])
 {
+	char	*ext;
+
 	if (argc < 2)
 		return (ft_printf("Usage: %s <file>\n\n" \
 							"Keybindings:\n" \
@@ -22,8 +24,9 @@ static int	parse_args(t_ctx *ctx, int argc, char *argv[])
 							"	Escape: exit\n", \
 							*argv), \
 						-1);
-	ctx->args.map_path = *++argv;
-	if ((size_t)(ft_strstr(*argv, ".ber") - *argv) != ft_strlen(*argv) - 4)
+	ctx->path = *++argv;
+	ext = ft_strrchr(*argv, '.');
+	if (ext == NULL || ft_strcmp(ext, ".ber") != 0)
 		return (-1);
 	return (0);
 }
@@ -56,7 +59,7 @@ int	main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	if (init_win(&ctx) < 0)
 		return (free_map(ctx.map), EXIT_FAILURE);
-	if (load_assets(&ctx) < 0 || draw_static(&ctx) < 0)
+	if (load_assets(&ctx) < 0 || draw_map(&ctx) < 0 || draw_entities(&ctx) < 0)
 		return (free_map(ctx.map), mlx_terminate(ctx.mlx), EXIT_FAILURE);
 	mlx_loop(ctx.mlx);
 	mlx_terminate(ctx.mlx);

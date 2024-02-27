@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/24 20:02:48 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/27 12:09:12 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,9 @@ static void	update_frame(t_ctx *ctx, double time)
 void	ft_hook_loop(void *param)
 {
 	t_ctx	*ctx;
-	double	time;
 
 	ctx = param;
-	time = mlx_get_time();
-	update_frame(ctx, time);
+	update_frame(ctx, mlx_get_time());
 	/*move(ctx);
 	ft_bzero(ctx->bg->pixels, ctx->width * ctx->height * 4);
 	traverse(ctx, (t_coords){0, 0}, ctx->map->values, NULL);*/

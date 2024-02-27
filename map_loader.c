@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/06 19:39:55 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/27 08:03:31 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,12 @@ void	free_map(t_map *map)
 			free(map->r);
 		if (map->c)
 			free(map->c);
+		if (map->entities)
+			free(map->entities);
 		map->r = NULL;
 		map->c = NULL;
+		map->entities = NULL;
+		map->player = NULL;
 		free(map);
 	}
 }
@@ -71,6 +75,7 @@ static const t_cell_type	g_type_table[0xFF] = {\
 	['C'] = C_COLLECTIBLE, \
 	['E'] = C_EXIT, \
 	['P'] = C_PLAYER, \
+	['B'] = C_ENEMY, \
 };
 
 static int	parse_types(t_map *map, unsigned int depth)
@@ -87,11 +92,11 @@ static int	parse_types(t_map *map, unsigned int depth)
 	while (x--)
 	{
 		cells[x].t = g_type_table[(unsigned char)map->r[depth][x]];
-		if (!cells[x].t || (cells[x].t == C_PLAYER && map->start.x) \
+		if (!cells[x].t || (cells[x].t == C_PLAYER && map->has_player) \
 							|| (cells[x].t == C_EXIT && map->has_exit))
 			return (free(cells), -1);
-		if (cells[x].t == C_PLAYER && !map->start.x)
-			map->start = (t_coords){x, depth};
+		if (cells[x].t == C_PLAYER)
+			map->has_player = true;
 		if (cells[x].t == C_COLLECTIBLE)
 			map->collectibles++;
 		if (cells[x].t == C_EXIT)
@@ -127,7 +132,7 @@ int	load_map(t_ctx *ctx)
 {
 	int		fd;
 
-	fd = open(ctx->args.map_path, O_RDONLY);
+	fd = open(ctx->path, O_RDONLY);
 	if (fd < 0)
 		return (-1);
 	ctx->map = ft_calloc(1, sizeof(t_map));
@@ -139,6 +144,8 @@ int	load_map(t_ctx *ctx)
 	if (parse_types(ctx->map, 0) < 0)
 		return (free_map(ctx->map), -1);
 	if (!prevalidate_set_variants(ctx->map))
+		return (free_map(ctx->map), -1);
+	if (!init_entities(ctx->map, (t_coords){0, 0}, 0))
 		return (free_map(ctx->map), -1);
 	if (!map_is_valid(ctx->map))
 		return (free_map(ctx->map), -1);

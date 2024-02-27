@@ -6,7 +6,7 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2024/02/06 19:35:41 by rvandepu         ###   ########.fr        #
+#    Updated: 2024/02/27 05:27:24 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ FILES  := $(NAME) \
 		  map_loader \
 		  map_utils \
 		  asset_loader \
+		  entities \
 		  hooks \
 		  loop \
 		  renderer \
