@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/27 16:18:20 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/28 05:03:33 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	load_variant(t_ctx *ctx, t_cell_type type, int frame, int variant)
 		return (-1);
 	texture = mlx_load_png(path);
 	if (texture == NULL)
-		return (-1);
+		return (ft_fprintf(stderr, "Failed to load '%s'\n", path), -1);
 	recolor_texture(texture, g_asset_meta[type].s_meta.color);
 	image = mlx_texture_to_image(ctx->mlx, texture);
 	mlx_resize_image(image, image->width * 2, image->height * 2);
