@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/27 15:52:50 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/28 08:07:52 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,11 @@ typedef struct s_cell
 
 typedef struct s_entity
 {
-	t_coords	c;
-	t_cell_type	t;
-	int			i[3][32];
+	t_coords		oc;
+	t_coords		c;
+	t_cell_type		t;
+	int				i[3][32];
+	unsigned char	lf;
 }	t_entity;
 
 typedef struct s_map
@@ -118,11 +120,15 @@ typedef struct s_asset
 typedef unsigned int	t_flags;
 typedef enum e_flag
 {
-	F_UP = 1,
-	F_DOWN,
-	F_LEFT,
-	F_RIGHT,
-	F_QUIT,
+	H_UP = 1,
+	H_DOWN,
+	H_LEFT,
+	H_RIGHT,
+	P_UP,
+	P_DOWN,
+	P_LEFT,
+	P_RIGHT,
+	P_QUIT,
 }	t_flag;
 
 typedef struct s_ctx
@@ -138,26 +144,31 @@ typedef struct s_ctx
 }	t_ctx;
 
 // map_loader.c
-void			free_map(t_map *map);
-int				load_map(t_ctx *fdf);
+void	free_map(t_map *map);
+int		load_map(t_ctx *fdf);
 
 // map_utils.c
-bool			map_is_valid(t_map *map);
+bool	alloc_mem(t_map *map, unsigned int depth);
+void	clear_mem(t_map *map);
+void	free_mem(t_map *map);
+bool	map_is_valid(t_map *map);
 
 // asset_loader.c
-int				load_assets(t_ctx *ctx);
+int		load_assets(t_ctx *ctx);
 
 // entities.c
-bool			init_entities(t_map *map, t_coords c, unsigned int depth);
+bool	init_entities(t_map *map, t_coords c, unsigned int depth);
+int		iter_entities_variant(t_ctx *ctx,
+			int (*f)(t_ctx *, t_entity *, unsigned int));
 
 // hooks.c
-void			ft_hook_key(mlx_key_data_t keydata, void *param);
+void	ft_hook_key(mlx_key_data_t keydata, void *param);
 
 // loop.c
-void			ft_hook_loop(void *param);
+void	ft_hook_loop(void *param);
 
 // renderer.c
-int				draw_map(t_ctx *ctx);
-int				draw_entities(t_ctx *ctx);
+int		draw_map(t_ctx *ctx);
+int		draw_entity_variant(t_ctx *ctx, t_entity *entity, unsigned int variant);
 
 #endif

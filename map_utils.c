@@ -6,19 +6,19 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 18:11:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/27 08:03:50 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/28 08:40:13 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static bool	alloc_mem(t_map *map, unsigned int depth)
+bool	alloc_mem(t_map *map, unsigned int depth)
 {
 	bool	*line;
 
 	if (depth == map->height)
-		return (map->mem = ft_calloc(depth, sizeof(bool *)), map->mem);
-	line = ft_calloc(map->width, sizeof(bool));
+		return (map->mem = ft_calloc(depth, sizeof(int *)), map->mem);
+	line = ft_calloc(map->width, sizeof(int));
 	if (line == NULL)
 		return (false);
 	if (!alloc_mem(map, depth + 1))
@@ -26,15 +26,24 @@ static bool	alloc_mem(t_map *map, unsigned int depth)
 	return (map->mem[depth] = line, true);
 }
 
-static bool	free_mem(t_map *map, unsigned int depth)
+void	clear_mem(t_map *map)
 {
-	if (depth == map->height)
-		return (false);
-	free_mem(map, depth + 1);
-	free(map->mem[depth]);
-	if (!depth)
-		free(map->mem);
-	return (false);
+	unsigned int	i;
+
+	i = 0;
+	while (i < map->height)
+		ft_bzero(map->mem[i++], map->width * sizeof(int));
+}
+
+void	free_mem(t_map *map)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < map->height)
+		free(map->mem[i++]);
+	free(map->mem);
+	map->mem = NULL;
 }
 
 static bool	traverse_map(t_map *map, t_coords c)
@@ -57,18 +66,17 @@ static bool	traverse_map(t_map *map, t_coords c)
 
 bool	map_is_valid(t_map *map)
 {
-	unsigned int	mem;
+	unsigned int	o_collectibles;
 
 	if (!map->has_player || !map->collectibles || !map->has_exit)
 		return (false);
 	if (!alloc_mem(map, 0))
 		return (false);
-	mem = map->collectibles;
+	o_collectibles = map->collectibles;
 	if (!traverse_map(map, map->player->c))
-		return (free_mem(map, 0), false);
-	free_mem(map, 0);
+		return (false);
 	if (map->collectibles)
 		return (false);
-	map->collectibles = mem;
+	map->collectibles = o_collectibles;
 	return (true);
 }

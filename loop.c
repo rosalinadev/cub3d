@@ -6,34 +6,14 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/27 12:09:12 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/28 08:16:23 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-/*static void	move(t_ctx *ctx)
-{
-	static double	last_time = 0;
-	double			time;
-	double			upf;
-
-	time = mlx_get_time();
-	upf = (time - last_time) * 100 / ctx->zoom;
-	if (ft_bit_check(ctx->flags, F_UP))
-		ctx->trans.z -= upf;
-	else if (ft_bit_check(ctx->flags, F_DOWN))
-		ctx->trans.z += upf;
-	if (ft_bit_check(ctx->flags, F_LEFT))
-		ctx->trans.x -= upf;
-	else if (ft_bit_check(ctx->flags, F_RIGHT))
-		ctx->trans.x += upf;
-	if (ft_bit_check(ctx->flags, F_UP))
-		ctx->trans.y += upf;
-	else if (ft_bit_check(ctx->flags, F_DOWN))
-		ctx->trans.y -= upf;
-	last_time = time;
-}*/
+#define FRAME_TIME 0.160
+#define MOVE_TIME 0.100
 
 static void	set_frame(t_asset *asset, bool enabled)
 {
@@ -61,7 +41,7 @@ static void	update_frame(t_ctx *ctx, double time)
 
 	if (!last_time)
 		return ((void)(last_time = time));
-	if (time - last_time < 0.160)
+	if (time - last_time < FRAME_TIME)
 		return ;
 	if (++frame == 3)
 		frame = 0;
@@ -75,15 +55,26 @@ static void	update_frame(t_ctx *ctx, double time)
 	last_time = time;
 }
 
+// TODO
 void	ft_hook_loop(void *param)
 {
-	t_ctx	*ctx;
+	t_ctx			*ctx;
+	static double	last_move_time;
 
 	ctx = param;
 	update_frame(ctx, mlx_get_time());
-	/*move(ctx);
-	ft_bzero(ctx->bg->pixels, ctx->width * ctx->height * 4);
-	traverse(ctx, (t_coords){0, 0}, ctx->map->values, NULL);*/
-	if (ft_bit_check(ctx->flags, F_QUIT))
+	if ((ft_bit_check(ctx->flags, P_LEFT) || ft_bit_check(ctx->flags, P_RIGHT) \
+		|| ft_bit_check(ctx->flags, P_UP) || ft_bit_check(ctx->flags, P_DOWN)) \
+	|| ((ft_bit_check(ctx->flags, H_LEFT) || ft_bit_check(ctx->flags, H_RIGHT) \
+		|| ft_bit_check(ctx->flags, H_UP) || ft_bit_check(ctx->flags, H_DOWN)) \
+		&& mlx_get_time() - last_move_time >= MOVE_TIME))
+	{
+		clear_mem(ctx->map);
+		move_entities();
+		(ft_bit_clear(ctx->flags, P_LEFT), ft_bit_clear(ctx->flags, P_RIGHT),
+			ft_bit_clear(ctx->flags, P_UP), ft_bit_clear(ctx->flags, P_DOWN));
+		last_move_time = mlx_get_time();
+	}
+	if (ft_bit_check(ctx->flags, P_QUIT))
 		mlx_close_window(ctx->mlx);
 }

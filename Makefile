@@ -6,7 +6,7 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2024/02/28 05:58:52 by rvandepu         ###   ########.fr        #
+#    Updated: 2024/02/28 08:37:22 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,11 +47,11 @@ LDLIBS		+= -lmlx42 -ldl -lglfw -lpthread -lm
 all: $(NAME)
 
 clean:
-	$(RM) $(OBJ) $(TEST_BIN)
-
-fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean
 	$(RM) -r $(LIBMLX_DIR)/build
+	$(RM) $(OBJ)
+
+fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all

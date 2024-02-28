@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/27 08:03:31 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/28 06:59:30 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,8 @@ void	free_map(t_map *map)
 			free(map->c);
 		if (map->entities)
 			free(map->entities);
-		map->r = NULL;
-		map->c = NULL;
-		map->entities = NULL;
-		map->player = NULL;
+		if (map->mem)
+			free_mem(map);
 		free(map);
 	}
 }

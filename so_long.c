@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/27 15:53:17 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/02/28 08:06:19 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ static int	init_win(t_ctx *ctx)
 	if (!ctx->mlx)
 		return (free_map(ctx->map), -1);
 	ctx->bg = mlx_new_image(ctx->mlx, 1, 1);
-	if (ctx->bg == NULL || (mlx_put_pixel(ctx->bg, 0, 0, 0x080808FF), false)
-		|| !mlx_resize_image(ctx->bg, ctx->width, ctx->height)
+	if (ctx->bg == NULL || (mlx_put_pixel(ctx->bg, 0, 0, 0x000000FF),
+			!mlx_resize_image(ctx->bg, ctx->width, ctx->height))
 		|| mlx_image_to_window(ctx->mlx, ctx->bg, 0, 0) < 0)
 		return (mlx_terminate(ctx->mlx), -1);
 	mlx_key_hook(ctx->mlx, &ft_hook_key, ctx);
@@ -59,7 +59,8 @@ int	main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	if (init_win(&ctx) < 0)
 		return (free_map(ctx.map), EXIT_FAILURE);
-	if (load_assets(&ctx) < 0 || draw_map(&ctx) < 0 || draw_entities(&ctx) < 0)
+	if (load_assets(&ctx) < 0 || draw_map(&ctx) < 0
+		|| iter_entities_variant(&ctx, draw_entity_variant) < 0)
 		return (free_map(ctx.map), mlx_terminate(ctx.mlx), EXIT_FAILURE);
 	mlx_loop(ctx.mlx);
 	mlx_terminate(ctx.mlx);
