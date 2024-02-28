@@ -6,7 +6,7 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2024/02/27 05:27:24 by rvandepu         ###   ########.fr        #
+#    Updated: 2024/02/28 05:58:52 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ CFLAGS		+= -pthread
 LDFLAGS		+= -L$(LIBMLX_DIR)/build
 LDLIBS		+= -lmlx42 -ldl -lglfw -lpthread -lm
 
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re test sprites
 
 all: $(NAME)
 
@@ -58,6 +58,9 @@ re: fclean all
 
 test: CFLAGS += -g
 test: re
+
+sprites:
+	ln -f -s -T /sgoinfre/goinfre/Perso/rvandepu/baba-is-you-sprites sprites
 
 $(LIBFT_PATH):
 	$(MAKE) -C $(LIBFT_DIR) $(LIBFT) -j $$(nproc)
