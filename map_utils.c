@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 18:11:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/28 08:40:13 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/01 15:32:36 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	alloc_mem(t_map *map, unsigned int depth)
 {
-	bool	*line;
+	int	*line;
 
 	if (depth == map->height)
 		return (map->mem = ft_calloc(depth, sizeof(int *)), map->mem);

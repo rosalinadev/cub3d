@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/28 06:59:30 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/01 18:49:51 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ static bool	prevalidate_set_variants(t_map *map)
 			if (map->c[y][x].t == C_WALL)
 			{
 				if (x + 1 < map->width && map->c[y][x + 1].t == C_WALL)
-					map->c[y][x].v = ft_bit_set(map->c[y][x].v, V_WEST);
+					map->c[y][x].v = ft_bit_set(map->c[y][x].v, F_WEST);
 				if (y > 0 && map->c[y - 1][x].t == C_WALL)
-					map->c[y][x].v = ft_bit_set(map->c[y][x].v, V_NORTH);
+					map->c[y][x].v = ft_bit_set(map->c[y][x].v, F_NORTH);
 				if (x > 0 && map->c[y][x - 1].t == C_WALL)
-					map->c[y][x].v = ft_bit_set(map->c[y][x].v, V_EAST);
+					map->c[y][x].v = ft_bit_set(map->c[y][x].v, F_EAST);
 				if (y + 1 < map->height && map->c[y + 1][x].t == C_WALL)
-					map->c[y][x].v = ft_bit_set(map->c[y][x].v, V_SOUTH);
+					map->c[y][x].v = ft_bit_set(map->c[y][x].v, F_SOUTH);
 			}
 			else if (!x || x == map->width - 1 || !y || y == map->height - 1)
 				return (false);

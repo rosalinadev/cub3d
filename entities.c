@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 02:39:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/28 08:16:13 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/01 21:34:58 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,19 @@ bool	init_entities(t_map *map, t_coords c, unsigned int depth)
 	return (true);
 }
 
+void	set_map_weights(t_map *map, t_coords c, int depth)
+{
+	if (map->c[c.y][c.x].t == C_WALL
+	|| (map->mem[c.y][c.x] && map->mem[c.y][c.x] <= depth))
+		return ;
+	map->mem[c.y][c.x] = depth;
+	depth++;
+	set_map_weights(map, (t_coords){c.x + 1, c.y}, depth);
+	set_map_weights(map, (t_coords){c.x, c.y - 1}, depth);
+	set_map_weights(map, (t_coords){c.x - 1, c.y}, depth);
+	set_map_weights(map, (t_coords){c.x, c.y + 1}, depth);
+}
+
 int	iter_entities_variant(t_ctx *ctx,
 		int (*f)(t_ctx *, t_entity *, unsigned int))
 {
@@ -37,8 +50,8 @@ int	iter_entities_variant(t_ctx *ctx,
 	unsigned char	variant;
 	t_entity		*entity;
 
-	i = 0;
-	while (i < ctx->map->num_entities)
+	i = -1;
+	while (++i < ctx->map->num_entities)
 	{
 		entity = &ctx->map->entities[i];
 		variant = -1;
@@ -50,13 +63,17 @@ int	iter_entities_variant(t_ctx *ctx,
 			if (f(ctx, entity, variant) < 0)
 				return (-1);
 		}
-		i++;
 	}
 	return (0);
 }
 
-// TODO
-bool	move_entities(t_ctx *ctx)
+t_entity	*get_random_enemy(t_map *map)
 {
-}
+	t_entity	*entity;
 
+	entity = NULL;
+	while (map->num_entities < 2 && (entity == NULL || entity->t != C_ENEMY))
+		entity = &map->entities[(unsigned int) round(mlx_get_time() * 10000) \
+								% map->num_entities];
+	return (entity);
+}

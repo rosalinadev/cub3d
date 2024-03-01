@@ -6,14 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/28 08:16:23 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/01 23:02:25 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-#define FRAME_TIME 0.160
-#define MOVE_TIME 0.100
 
 static void	set_frame(t_asset *asset, bool enabled)
 {
@@ -63,18 +60,20 @@ void	ft_hook_loop(void *param)
 
 	ctx = param;
 	update_frame(ctx, mlx_get_time());
-	if ((ft_bit_check(ctx->flags, P_LEFT) || ft_bit_check(ctx->flags, P_RIGHT) \
-		|| ft_bit_check(ctx->flags, P_UP) || ft_bit_check(ctx->flags, P_DOWN)) \
-	|| ((ft_bit_check(ctx->flags, H_LEFT) || ft_bit_check(ctx->flags, H_RIGHT) \
-		|| ft_bit_check(ctx->flags, H_UP) || ft_bit_check(ctx->flags, H_DOWN)) \
-		&& mlx_get_time() - last_move_time >= MOVE_TIME))
+	if (ctx->flags & 0b1111 << P_UP || (ctx->flags & 0b1111 << H_UP
+			&& mlx_get_time() - last_move_time >= MOVE_TIME))
 	{
+		if (ctx->flags & 0b1111 << P_UP)
+			ctx->flags &= ((unsigned int) ~0 << (4 + H_UP) | ctx->flags >> 4);
 		clear_mem(ctx->map);
-		move_entities();
-		(ft_bit_clear(ctx->flags, P_LEFT), ft_bit_clear(ctx->flags, P_RIGHT),
-			ft_bit_clear(ctx->flags, P_UP), ft_bit_clear(ctx->flags, P_DOWN));
+		set_map_weights(ctx->map, ctx->map->player->c, 1);
+		move_player(ctx);
+		iter_entities_variant(ctx, update_entity_variant);
+		//move_entities();
+		ctx->flags &= ~(0b1111 << P_UP);
 		last_move_time = mlx_get_time();
 	}
+	render_entities(ctx, last_move_time, mlx_get_time());
 	if (ft_bit_check(ctx->flags, P_QUIT))
 		mlx_close_window(ctx->mlx);
 }

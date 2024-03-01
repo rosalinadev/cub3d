@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/28 08:07:52 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/01 22:32:15 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,19 @@ typedef enum e_cell_type
 	C_MAXTYPE
 }	t_cell_type;
 
-typedef unsigned char	t_variants;
-typedef enum e_variant
+typedef unsigned char	t_variant;
+typedef enum e_facing
 {
-	V_WEST,
-	V_NORTH,
-	V_EAST,
-	V_SOUTH,
-}	t_variant;
+	F_WEST,
+	F_NORTH,
+	F_EAST,
+	F_SOUTH,
+}	t_facing;
 
 typedef struct s_cell
 {
 	t_cell_type	t;
-	t_variants	v;
+	t_variant	v;
 	int			i[3];
 }	t_cell;
 
@@ -82,7 +82,8 @@ typedef struct s_entity
 	t_coords		c;
 	t_cell_type		t;
 	int				i[3][32];
-	unsigned char	lf;
+	unsigned char	f;
+	t_facing		d;
 }	t_entity;
 
 typedef struct s_map
@@ -97,10 +98,8 @@ typedef struct s_map
 	t_entity		*player;
 	bool			has_player;
 	bool			has_exit;
-	bool			**mem;
+	int				**mem;
 }	t_map;
-
-# define CSIZE 48
 
 typedef struct s_asset
 {
@@ -144,31 +143,45 @@ typedef struct s_ctx
 }	t_ctx;
 
 // map_loader.c
-void	free_map(t_map *map);
-int		load_map(t_ctx *fdf);
+void		free_map(t_map *map);
+int			load_map(t_ctx *fdf);
 
 // map_utils.c
-bool	alloc_mem(t_map *map, unsigned int depth);
-void	clear_mem(t_map *map);
-void	free_mem(t_map *map);
-bool	map_is_valid(t_map *map);
+bool		alloc_mem(t_map *map, unsigned int depth);
+void		clear_mem(t_map *map);
+void		free_mem(t_map *map);
+bool		map_is_valid(t_map *map);
 
 // asset_loader.c
-int		load_assets(t_ctx *ctx);
+int			load_assets(t_ctx *ctx);
 
 // entities.c
-bool	init_entities(t_map *map, t_coords c, unsigned int depth);
-int		iter_entities_variant(t_ctx *ctx,
-			int (*f)(t_ctx *, t_entity *, unsigned int));
+bool		init_entities(t_map *map, t_coords c, unsigned int depth);
+void		set_map_weights(t_map *map, t_coords c, int depth);
+int			iter_entities_variant(t_ctx *ctx,
+				int (*f)(t_ctx *, t_entity *, unsigned int));
+t_entity	*get_random_enemy(t_map *map);
+
+// movement.c
+void		move_player(t_ctx *ctx);
+void		move_enemies(t_ctx *ctx);
 
 // hooks.c
-void	ft_hook_key(mlx_key_data_t keydata, void *param);
+void		ft_hook_key(mlx_key_data_t keydata, void *param);
 
 // loop.c
-void	ft_hook_loop(void *param);
+void		ft_hook_loop(void *param);
 
 // renderer.c
-int		draw_map(t_ctx *ctx);
-int		draw_entity_variant(t_ctx *ctx, t_entity *entity, unsigned int variant);
+# define CSIZE 48
+# define FRAME_TIME 0.160
+# define MOVE_TIME 0.100
+
+int			draw_map(t_ctx *ctx);
+int			draw_entity_variant(t_ctx *ctx, t_entity *entity,
+				unsigned int variant);
+int			update_entity_variant(t_ctx *ctx, t_entity *entity,
+				unsigned int variant);
+void		render_entities(t_ctx *ctx, double start, double curr);
 
 #endif
