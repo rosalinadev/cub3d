@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 18:59:35 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/01 22:30:43 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/04 23:17:19 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,11 @@ int	update_entity_variant(t_ctx *ctx, t_entity *entity, unsigned int variant)
 {
 	unsigned char	frame;
 
-	if ((entity->oc.x != entity->c.x || entity->oc.y != entity->c.y) && \
-		ctx->assets[0][entity->t].has_variants && !variant && ++entity->f == 4)
+	if (!variant && ctx->assets[0][entity->t].has_variants
+		&& (entity->oc.x != entity->c.x || entity->oc.y != entity->c.y)
+		&& ++entity->f == 4)
 		entity->f = 0;
+	entity->m = false;
 	frame = -1;
 	while (++frame < 3)
 		ctx->assets[frame][entity->t].img[variant]->instances[entity->i[frame] \
@@ -87,27 +89,27 @@ int	update_entity_variant(t_ctx *ctx, t_entity *entity, unsigned int variant)
 	return (0);
 }
 
-void	render_entities(t_ctx *ctx, double start, double curr)
+void	render_entities(t_ctx *ctx, double curr)
 {
 	unsigned int	i;
 	unsigned int	f;
 	unsigned char	v;
 	t_entity		*e;
 
-	if (curr - start > MOVE_TIME)
-		curr = start + MOVE_TIME;
 	i = -1;
 	while (++i < ctx->map->num_entities)
 	{
 		e = &ctx->map->entities[i];
 		v = e->d * 8 + e->f;
+		if (curr - e->lm > ANIM_TIME)
+			e->lm = curr - ANIM_TIME;
 		f = -1;
 		while (++f < 3)
 		{
 			ctx->assets[f][e->t].img[v]->instances[e->i[f][v]].x = round(CSIZE \
-			* (e->oc.x + (curr - start) / MOVE_TIME * (int)(e->c.x - e->oc.x)));
+			* (e->oc.x + (curr - e->lm) / ANIM_TIME * (int)(e->c.x - e->oc.x)));
 			ctx->assets[f][e->t].img[v]->instances[e->i[f][v]].y = round(CSIZE \
-			* (e->oc.y + (curr - start) / MOVE_TIME * (int)(e->c.y - e->oc.y)));
+			* (e->oc.y + (curr - e->lm) / ANIM_TIME * (int)(e->c.y - e->oc.y)));
 		}
 	}
 }

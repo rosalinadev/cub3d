@@ -6,24 +6,40 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 23:12:02 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/28 06:35:40 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/04 12:12:13 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
 static const unsigned char	g_is_pressed[350] = {\
+	[MLX_KEY_H] = H_LEFT, \
+	[MLX_KEY_J] = H_DOWN, \
+	[MLX_KEY_K] = H_UP, \
+	[MLX_KEY_L] = H_RIGHT, \
 	[MLX_KEY_W] = H_UP, \
 	[MLX_KEY_A] = H_LEFT, \
 	[MLX_KEY_S] = H_DOWN, \
 	[MLX_KEY_D] = H_RIGHT, \
+	[MLX_KEY_UP] = H_UP, \
+	[MLX_KEY_LEFT] = H_LEFT, \
+	[MLX_KEY_DOWN] = H_DOWN, \
+	[MLX_KEY_RIGHT] = H_RIGHT, \
 };
 
 static const unsigned char	g_was_pressed[350] = {\
+	[MLX_KEY_H] = P_LEFT, \
+	[MLX_KEY_J] = P_DOWN, \
+	[MLX_KEY_K] = P_UP, \
+	[MLX_KEY_L] = P_RIGHT, \
 	[MLX_KEY_W] = P_UP, \
 	[MLX_KEY_A] = P_LEFT, \
 	[MLX_KEY_S] = P_DOWN, \
 	[MLX_KEY_D] = P_RIGHT, \
+	[MLX_KEY_UP] = P_UP, \
+	[MLX_KEY_LEFT] = P_LEFT, \
+	[MLX_KEY_DOWN] = P_DOWN, \
+	[MLX_KEY_RIGHT] = P_RIGHT, \
 	[MLX_KEY_ESCAPE] = P_QUIT, \
 };
 

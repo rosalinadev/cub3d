@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/28 05:03:33 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/05 05:22:28 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 // TODO get correct colors from game palette
 static const t_asset	g_asset_meta[C_MAXTYPE] = {\
 	[C_WALL] = {{{"wall", {0x293141FF}}}, false, true}, \
-	[C_COLLECTIBLE] = {{{"key", {0xede285FF}}}, false, false}, \
-	[C_EXIT] = {{{"door", {0xe5533bFF}}}, false, false}, \
+	[C_COLLECTIBLE] = {{{"boba", {0xC29E46FF}}}, false, false}, \
+	[C_EXIT] = {{{"door", {0xE5533BFF}}}, false, false}, \
 	[C_PLAYER] = {{{"baba", {0xFFFFFFFF}}}, true, true}, \
-	[C_ENEMY] = {{{"bee", {0xFFFF00FF}}}, true, false}, \
+	[C_ENEMY] = {{{"statue", {0x82261CFF}}}, true, false}, \
 };
 
 static int	get_path(char path[100], t_cell_type type, int variant, int frame)

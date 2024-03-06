@@ -6,14 +6,13 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/01 22:32:15 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/06 18:58:22 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-//# include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
@@ -23,19 +22,6 @@
 # include "MLX42/MLX42.h"
 # include "libft.h"
 # include "ft_bitwise.h"
-
-typedef struct s_vec2
-{
-	float	x;
-	float	y;
-}	t_vec2;
-
-typedef struct s_vec3
-{
-	float	x;
-	float	y;
-	float	z;
-}	t_vec3;
 
 typedef union color
 {
@@ -81,10 +67,20 @@ typedef struct s_entity
 	t_coords		oc;
 	t_coords		c;
 	t_cell_type		t;
+	bool			m;
 	int				i[3][32];
 	unsigned char	f;
 	t_facing		d;
+	double			lm;
 }	t_entity;
+
+typedef enum e_gamestate
+{
+	G_PLAYING = 0,
+	G_PAUSED,
+	G_LOST,
+	G_WON,
+}	t_gamestate;
 
 typedef struct s_map
 {
@@ -93,6 +89,7 @@ typedef struct s_map
 	unsigned int	width;
 	unsigned int	height;
 	unsigned int	collectibles;
+	t_gamestate		gamestate;
 	unsigned int	num_entities;
 	t_entity		*entities;
 	t_entity		*player;
@@ -115,6 +112,18 @@ typedef struct s_asset
 	bool		is_entity;
 	bool		has_variants;
 }	t_asset;
+
+typedef struct s_char
+{
+	t_coords	p;
+	t_coords	s;
+}	t_char;
+
+typedef struct s_font
+{
+	mlx_texture_t	*img;
+	t_char			meta['~' - ' ' + 1];
+}	t_font;
 
 typedef unsigned int	t_flags;
 typedef enum e_flag
@@ -163,8 +172,8 @@ int			iter_entities_variant(t_ctx *ctx,
 t_entity	*get_random_enemy(t_map *map);
 
 // movement.c
-void		move_player(t_ctx *ctx);
-void		move_enemies(t_ctx *ctx);
+bool		move_player(t_ctx *ctx, t_flags flags);
+void		move_enemies(t_map *map);
 
 // hooks.c
 void		ft_hook_key(mlx_key_data_t keydata, void *param);
@@ -175,13 +184,14 @@ void		ft_hook_loop(void *param);
 // renderer.c
 # define CSIZE 48
 # define FRAME_TIME 0.160
-# define MOVE_TIME 0.100
+# define MOVE_TIME 0.150
+# define ANIM_TIME 0.100
 
 int			draw_map(t_ctx *ctx);
 int			draw_entity_variant(t_ctx *ctx, t_entity *entity,
 				unsigned int variant);
 int			update_entity_variant(t_ctx *ctx, t_entity *entity,
 				unsigned int variant);
-void		render_entities(t_ctx *ctx, double start, double curr);
+void		render_entities(t_ctx *ctx, double curr);
 
 #endif

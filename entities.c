@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 02:39:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/01 21:34:58 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/04 23:36:28 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ t_entity	*get_random_enemy(t_map *map)
 	t_entity	*entity;
 
 	entity = NULL;
-	while (map->num_entities < 2 && (entity == NULL || entity->t != C_ENEMY))
+	while (map->num_entities >= 2 && (entity == NULL || entity->t != C_ENEMY))
 		entity = &map->entities[(unsigned int) round(mlx_get_time() * 10000) \
 								% map->num_entities];
 	return (entity);

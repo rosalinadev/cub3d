@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/02/28 08:06:19 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:06:41 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	init_win(t_ctx *ctx)
 	ctx->height = ctx->map->height * CSIZE;
 	ctx->mlx = mlx_init(ctx->width, ctx->height, "so_long", false);
 	if (!ctx->mlx)
-		return (free_map(ctx->map), -1);
+		return (-1);
 	ctx->bg = mlx_new_image(ctx->mlx, 1, 1);
 	if (ctx->bg == NULL || (mlx_put_pixel(ctx->bg, 0, 0, 0x000000FF),
 			!mlx_resize_image(ctx->bg, ctx->width, ctx->height))
