@@ -6,51 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/06 16:03:34 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 12:45:25 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-static inline void	set_frame(t_asset *asset, bool enabled)
-{
-	unsigned char	variant;
-
-	variant = -1;
-	while (++variant < 32)
-	{
-		if ((asset->is_entity && asset->has_variants && variant % 8 >= 4) \
-		|| (asset->is_entity && !asset->has_variants && variant % 8 >= 1) \
-		|| (!asset->is_entity && asset->has_variants && variant >= 16) \
-		|| (!asset->is_entity && !asset->has_variants && variant >= 1))
-			continue ;
-		if (asset->img[variant])
-			asset->img[variant]->enabled = enabled;
-	}
-}
-
-static inline void	update_frame(t_ctx *ctx, double time)
-{
-	static double			last_time = 0;
-	static unsigned char	frame = 0;
-	unsigned char			i;
-	unsigned char			j;
-
-	if (!last_time)
-		return ((void)(last_time = time));
-	if (time - last_time < FRAME_TIME)
-		return ;
-	if (++frame == 3)
-		frame = 0;
-	i = 0;
-	while (++i < C_MAXTYPE)
-	{
-		j = 3;
-		while (j--)
-			set_frame(&ctx->assets[j][i], j == frame);
-	}
-	last_time = time;
-}
 
 static inline t_flags	interpret_input(t_flags *flags)
 {
@@ -81,28 +41,101 @@ static inline t_flags	interpret_input(t_flags *flags)
 	return (out | (*flags & last_flags & 0b1111 << H_UP));
 }
 
+static inline void	putnbr_buf(unsigned int n, char b[11])
+{
+	int		i;
+	int		j;
+
+	ft_bzero(b, 11);
+	i = 9;
+	while (n != 0)
+	{
+		b[i--] = '0' + n % 10;
+		n /= 10;
+	}
+	if (i == 9)
+		b[9] = '0';
+	i = 0;
+	j = 0;
+	while (i < 10)
+		if (b[i++])
+			b[j++] = b[i - 1];
+	b[j] = '\0';
+}
+
+static inline void	draw_movecount(t_ctx *ctx)
+{
+	static unsigned int	old_movecount;
+	t_coords			c;
+	char				str[23];
+	char				b[11];
+
+	if (ctx->map->movecount != old_movecount)
+	{
+		ft_bzero(ctx->counter->pixels,
+			ctx->counter->width * ctx->counter->height * 4);
+		ft_bzero(str, 23);
+		ft_strlcat(str, "Move count: ", 23);
+		putnbr_buf(ctx->map->movecount, b);
+		ft_strlcat(str, b, 23);
+		c = str_size(&ctx->font, str);
+		if (c.x < ctx->counter->width && c.y < ctx->counter->height)
+			draw_str(ctx->counter, &ctx->font, str, (t_coords)
+			{ctx->counter->width - 1 - c.x, ctx->counter->height - 1 - c.y});
+		ft_printf("%s\n", str);
+		old_movecount = ctx->map->movecount;
+	}
+}
+
+static inline void	draw_gamestate(t_ctx *ctx)
+{
+	static t_gamestate	old_gamestate;
+	t_coords			c;
+	char				str[15];
+
+	if (ctx->map->gamestate != old_gamestate)
+	{
+		ft_bzero(ctx->gametext->pixels,
+			ctx->gametext->width * ctx->gametext->height * 4);
+		ft_bzero(str, 15);
+		if (ctx->map->gamestate == G_PAUSED)
+			ft_strlcat(str, "Game paused...", 15);
+		else if (ctx->map->gamestate == G_LOST)
+			ft_strlcat(str, "You lost :c", 15);
+		else if (ctx->map->gamestate == G_WON)
+			ft_strlcat(str, "You won! :D", 15);
+		c = str_size(&ctx->font, str);
+		if (c.x && c.x < ctx->gametext->width && c.y < ctx->gametext->height)
+			draw_str(ctx->gametext, &ctx->font, str, (t_coords){(ctx->gametext \
+				->width - c.x) / 2 - 1, (ctx->gametext->height - c.y) / 2 - 1});
+		old_gamestate = ctx->map->gamestate;
+	}
+}
+
 // TODO
 void	ft_hook_loop(void *param)
 {
-	t_ctx			*ctx;
+	t_ctx			*c;
 	static double	last_move_time;
 	t_flags			flags;
 
-	ctx = param;
-	update_frame(ctx, mlx_get_time());
-	flags = interpret_input(&ctx->flags);
-	if (ctx->map->gamestate == G_PLAYING && \
-		(flags & 0b1111 << P_UP || (flags & 0b1111 << H_UP \
-			&& mlx_get_time() - last_move_time >= MOVE_TIME)))
+	c = param;
+	(update_frame(c, mlx_get_time()), flags = interpret_input(&c->flags));
+	if (ft_bit_check(flags, P_PAUSE) && c->map->gamestate <= G_PAUSED)
+		c->map->gamestate = (c->flags &= ~(1 << P_PAUSE), !c->map->gamestate);
+	if (c->map->gamestate == G_PLAYING && (flags & 0b1111 << P_UP || (flags \
+			& 0b1111 << H_UP && mlx_get_time() - last_move_time >= MOVE_TIME)))
 	{
-		clear_mem(ctx->map);
-		set_map_weights(ctx->map, ctx->map->player->c, 1);
-		move_player(ctx, flags);
-		move_enemies(ctx->map);
-		iter_entities_variant(ctx, update_entity_variant);
+		clear_mem(c->map);
+		set_map_weights(c->map, c->map->player->c, 1);
+		if (move_player(c->map, flags))
+			c->map->movecount++;
+		move_enemies(c->map);
+		iter_entities_variant(c, update_entity_variant);
 		last_move_time = mlx_get_time();
 	}
-	render_entities(ctx, mlx_get_time());
+	render_entities(c, mlx_get_time());
+	(draw_movecount(c), draw_gamestate(c));
 	if (ft_bit_check(flags, P_QUIT))
-		mlx_close_window(ctx->mlx);
+		mlx_close_window(c->mlx);
 }

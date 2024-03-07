@@ -6,71 +6,50 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 18:59:35 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/04 23:17:19 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 10:50:08 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static int	draw_cell(t_ctx *ctx, t_coords c, t_cell_type t)
+static inline void	set_frame(t_asset *asset, bool enabled)
 {
-	unsigned char	frame;
-	t_cell			*cell;
+	unsigned char	variant;
 
-	cell = &ctx->map->c[c.y][c.x];
-	if (cell->t == t)
+	variant = -1;
+	while (++variant < 32)
 	{
+		if ((asset->is_entity && asset->has_variants && variant % 8 >= 4) \
+		|| (asset->is_entity && !asset->has_variants && variant % 8 >= 1) \
+		|| (!asset->is_entity && asset->has_variants && variant >= 16) \
+		|| (!asset->is_entity && !asset->has_variants && variant >= 1))
+			continue ;
+		if (asset->img[variant])
+			asset->img[variant]->enabled = enabled;
+	}
+}
+
+void	update_frame(t_ctx *ctx, double time)
+{
+	static double			last_time = 0;
+	static unsigned char	frame = 0;
+	unsigned char			i;
+	unsigned char			j;
+
+	if (!last_time)
+		return ((void)(last_time = time));
+	if (time - last_time < FRAME_TIME)
+		return ;
+	if (++frame == 3)
 		frame = 0;
-		while (frame < 3)
-		{
-			cell->i[frame] = mlx_image_to_window(ctx->mlx, \
-				ctx->assets[frame][t].img[cell->v], c.x * CSIZE, c.y * CSIZE);
-			if (cell->i[frame] < 0)
-				return (-1);
-			ctx->assets[frame][t].img[cell->v]->enabled =!frame;
-			frame++;
-		}
-	}
-	return (0);
-}
-
-int	draw_map(t_ctx *ctx)
-{
-	t_coords		c;
-
-	c.y = ctx->map->height;
-	while (c.y--)
+	i = 0;
+	while (++i < C_MAXTYPE)
 	{
-		c.x = ctx->map->width;
-		while (c.x--)
-		{
-			if (draw_cell(ctx, c, C_WALL) < 0 \
-			|| draw_cell(ctx, c, C_COLLECTIBLE) < 0 \
-			|| draw_cell(ctx, c, C_EXIT) < 0)
-				return (-1);
-		}
+		j = 3;
+		while (j--)
+			set_frame(&ctx->assets[j][i], j == frame);
 	}
-	return (0);
-}
-
-int	draw_entity_variant(t_ctx *ctx, t_entity *entity, unsigned int variant)
-{
-	unsigned char	frame;
-
-	frame = 0;
-	while (frame < 3)
-	{
-		entity->i[frame][variant] = mlx_image_to_window(ctx->mlx, \
-			ctx->assets[frame][entity->t].img[variant], \
-			entity->c.x * CSIZE, entity->c.y * CSIZE);
-		if (entity->i[frame][variant] < 0)
-			return (-1);
-		ctx->assets[frame][entity->t].img[variant]->enabled =!frame;
-		ctx->assets[frame][entity->t].img[variant] \
-			->instances[entity->i[frame][variant]].enabled = !variant;
-		frame++;
-	}
-	return (0);
+	last_time = time;
 }
 
 int	update_entity_variant(t_ctx *ctx, t_entity *entity, unsigned int variant)

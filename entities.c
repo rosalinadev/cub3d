@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 02:39:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/04 23:36:28 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 05:48:49 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ bool	init_entities(t_map *map, t_coords c, unsigned int depth)
 	return (true);
 }
 
+// TODO decide on collisions
 void	set_map_weights(t_map *map, t_coords c, int depth)
 {
 	if (map->c[c.y][c.x].t == C_WALL

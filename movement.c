@@ -6,12 +6,13 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 18:39:58 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/05 01:02:36 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 05:48:51 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+// TODO choose collision, kill player?
 static bool	move_to(t_map *map, t_entity *entity, t_coords nc)
 {
 	entity->oc = entity->c;
@@ -35,25 +36,20 @@ static bool	move_to(t_map *map, t_entity *entity, t_coords nc)
 	return (true);
 }
 
-// TODO count moves
-bool	move_player(t_ctx *ctx, t_flags flags)
+bool	move_player(t_map *map, t_flags flags)
 {
 	t_entity	*player;
-	bool		r;
 
-	player = ctx->map->player;
-	r = false;
+	player = map->player;
 	if (ft_bit_check(flags, H_RIGHT))
-		r = move_to(ctx->map, player, (t_coords){player->c.x + 1, player->c.y});
+		return (move_to(map, player, (t_coords){player->c.x + 1, player->c.y}));
 	else if (ft_bit_check(flags, H_UP))
-		r = move_to(ctx->map, player, (t_coords){player->c.x, player->c.y - 1});
+		return (move_to(map, player, (t_coords){player->c.x, player->c.y - 1}));
 	else if (ft_bit_check(flags, H_LEFT))
-		r = move_to(ctx->map, player, (t_coords){player->c.x - 1, player->c.y});
+		return (move_to(map, player, (t_coords){player->c.x - 1, player->c.y}));
 	else if (ft_bit_check(flags, H_DOWN))
-		r = move_to(ctx->map, player, (t_coords){player->c.x, player->c.y + 1});
-	if (r)
-		;
-	return (r);
+		return (move_to(map, player, (t_coords){player->c.x, player->c.y + 1}));
+	return (false);
 }
 
 void	move_enemy(t_map *map, t_entity *e)
@@ -91,7 +87,6 @@ void	move_enemies(t_map *map)
 		enemy = get_random_enemy(map);
 		if (!enemy || enemy->m)
 			continue ;
-		printf("chose %p (%d,%d) at %f\n", enemy, enemy->c.x, enemy->c.y, mlx_get_time());
 		move_enemy(map, enemy);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 23:12:02 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/04 12:12:13 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 11:54:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static const unsigned char	g_was_pressed[350] = {\
 	[MLX_KEY_LEFT] = P_LEFT, \
 	[MLX_KEY_DOWN] = P_DOWN, \
 	[MLX_KEY_RIGHT] = P_RIGHT, \
+	[MLX_KEY_SPACE] = P_PAUSE, \
 	[MLX_KEY_ESCAPE] = P_QUIT, \
 };
 

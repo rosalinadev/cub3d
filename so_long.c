@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/04 19:06:41 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 13:00:00 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static int	parse_args(t_ctx *ctx, int argc, char *argv[])
 	char	*ext;
 
 	if (argc < 2)
-		return (ft_printf("Usage: %s <file>\n\n" \
+		return (ft_printf("Usage: %s <map.ber>\n\n" \
 							"Keybindings:\n" \
-							"	WASD: move\n" \
-							"	F11: toggle fullscreen\n" \
+							"	WASD: move (or HJKL or arrows)\n" \
+							"	Space: pause\n", \
 							"	Escape: exit\n", \
 							*argv), \
 						-1);
@@ -60,9 +60,12 @@ int	main(int argc, char *argv[])
 	if (init_win(&ctx) < 0)
 		return (free_map(ctx.map), EXIT_FAILURE);
 	if (load_assets(&ctx) < 0 || draw_map(&ctx) < 0
-		|| iter_entities_variant(&ctx, draw_entity_variant) < 0)
-		return (free_map(ctx.map), mlx_terminate(ctx.mlx), EXIT_FAILURE);
+		|| iter_entities_variant(&ctx, draw_entity_variant) < 0
+		|| !init_font(&ctx))
+		return (mlx_delete_texture(ctx.font.img), mlx_terminate(ctx.mlx),
+			free_map(ctx.map), EXIT_FAILURE);
 	mlx_loop(ctx.mlx);
+	mlx_delete_texture(ctx.font.img);
 	mlx_terminate(ctx.mlx);
 	free_map(ctx.map);
 	return (EXIT_SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/06 18:58:22 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 11:46:16 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef struct s_map
 	unsigned int	width;
 	unsigned int	height;
 	unsigned int	collectibles;
+	unsigned int	movecount;
 	t_gamestate		gamestate;
 	unsigned int	num_entities;
 	t_entity		*entities;
@@ -109,8 +110,8 @@ typedef struct s_asset
 		}			s_meta;
 		mlx_image_t	*img[32];
 	};
-	bool		is_entity;
-	bool		has_variants;
+	bool	is_entity;
+	bool	has_variants;
 }	t_asset;
 
 typedef struct s_char
@@ -123,6 +124,7 @@ typedef struct s_font
 {
 	mlx_texture_t	*img;
 	t_char			meta['~' - ' ' + 1];
+	unsigned char	sc;
 }	t_font;
 
 typedef unsigned int	t_flags;
@@ -136,6 +138,7 @@ typedef enum e_flag
 	P_DOWN,
 	P_LEFT,
 	P_RIGHT,
+	P_PAUSE,
 	P_QUIT,
 }	t_flag;
 
@@ -146,6 +149,9 @@ typedef struct s_ctx
 	mlx_image_t	*bg;
 	t_map		*map;
 	t_asset		assets[3][C_MAXTYPE];
+	t_font		font;
+	mlx_image_t	*counter;
+	mlx_image_t	*gametext;
 	int			width;
 	int			height;
 	t_flags		flags;
@@ -172,26 +178,36 @@ int			iter_entities_variant(t_ctx *ctx,
 t_entity	*get_random_enemy(t_map *map);
 
 // movement.c
-bool		move_player(t_ctx *ctx, t_flags flags);
+bool		move_player(t_map *map, t_flags flags);
 void		move_enemies(t_map *map);
 
 // hooks.c
 void		ft_hook_key(mlx_key_data_t keydata, void *param);
 
-// loop.c
-void		ft_hook_loop(void *param);
-
-// renderer.c
+// Drawing & rendering
 # define CSIZE 48
 # define FRAME_TIME 0.160
 # define MOVE_TIME 0.150
 # define ANIM_TIME 0.100
 
+// drawer.c
 int			draw_map(t_ctx *ctx);
 int			draw_entity_variant(t_ctx *ctx, t_entity *entity,
 				unsigned int variant);
+
+// renderer.c
+void		update_frame(t_ctx *ctx, double time);
 int			update_entity_variant(t_ctx *ctx, t_entity *entity,
 				unsigned int variant);
 void		render_entities(t_ctx *ctx, double curr);
+
+// font.c
+bool		init_font(t_ctx *ctx);
+t_coords	str_size(t_font *font, const char *str);
+bool		draw_str(mlx_image_t *img, t_font *font, const char *str,
+				t_coords pos);
+
+// loop.c
+void		ft_hook_loop(void *param);
 
 #endif
