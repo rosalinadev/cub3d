@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 11:46:16 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 16:35:34 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,8 +178,8 @@ int			iter_entities_variant(t_ctx *ctx,
 t_entity	*get_random_enemy(t_map *map);
 
 // movement.c
-bool		move_player(t_map *map, t_flags flags);
-void		move_enemies(t_map *map);
+bool		move_player(t_ctx *ctx, t_flags flags);
+void		move_enemies(t_ctx *ctx);
 
 // hooks.c
 void		ft_hook_key(mlx_key_data_t keydata, void *param);

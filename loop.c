@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 12:45:25 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 17:43:42 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,12 @@ static inline void	draw_gamestate(t_ctx *ctx)
 		if (c.x && c.x < ctx->gametext->width && c.y < ctx->gametext->height)
 			draw_str(ctx->gametext, &ctx->font, str, (t_coords){(ctx->gametext \
 				->width - c.x) / 2 - 1, (ctx->gametext->height - c.y) / 2 - 1});
+		if (ctx->map->gamestate == G_LOST || ctx->map->gamestate == G_WON)
+			ft_printf("%s\n", str);
 		old_gamestate = ctx->map->gamestate;
 	}
 }
 
-// TODO
 void	ft_hook_loop(void *param)
 {
 	t_ctx			*c;
@@ -120,7 +121,8 @@ void	ft_hook_loop(void *param)
 	t_flags			flags;
 
 	c = param;
-	(update_frame(c, mlx_get_time()), flags = interpret_input(&c->flags));
+	update_frame(c, mlx_get_time());
+	flags = interpret_input(&c->flags);
 	if (ft_bit_check(flags, P_PAUSE) && c->map->gamestate <= G_PAUSED)
 		c->map->gamestate = (c->flags &= ~(1 << P_PAUSE), !c->map->gamestate);
 	if (c->map->gamestate == G_PLAYING && (flags & 0b1111 << P_UP || (flags \
@@ -128,14 +130,15 @@ void	ft_hook_loop(void *param)
 	{
 		clear_mem(c->map);
 		set_map_weights(c->map, c->map->player->c, 1);
-		if (move_player(c->map, flags))
+		if (move_player(c, flags))
 			c->map->movecount++;
-		move_enemies(c->map);
+		move_enemies(c);
 		iter_entities_variant(c, update_entity_variant);
 		last_move_time = mlx_get_time();
 	}
 	render_entities(c, mlx_get_time());
-	(draw_movecount(c), draw_gamestate(c));
+	draw_movecount(c);
+	draw_gamestate(c);
 	if (ft_bit_check(flags, P_QUIT))
 		mlx_close_window(c->mlx);
 }

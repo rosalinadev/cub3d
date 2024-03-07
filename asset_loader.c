@@ -6,19 +6,18 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/05 05:22:28 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 17:50:18 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-// TODO get correct colors from game palette
 static const t_asset	g_asset_meta[C_MAXTYPE] = {\
 	[C_WALL] = {{{"wall", {0x293141FF}}}, false, true}, \
 	[C_COLLECTIBLE] = {{{"boba", {0xC29E46FF}}}, false, false}, \
 	[C_EXIT] = {{{"door", {0xE5533BFF}}}, false, false}, \
 	[C_PLAYER] = {{{"baba", {0xFFFFFFFF}}}, true, true}, \
-	[C_ENEMY] = {{{"statue", {0x82261CFF}}}, true, false}, \
+	[C_ENEMY] = {{{"it", {0x82261CFF}}}, true, true}, \
 };
 
 static int	get_path(char path[100], t_cell_type type, int variant, int frame)

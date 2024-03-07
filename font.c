@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 00:35:51 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 12:44:53 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/07 17:41:02 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #define FHEIGHT 16
 
-// TODO determine spacing
 static inline int	get_char_width_skip(mlx_texture_t *img, t_coords *c)
 {
 	int	w;
