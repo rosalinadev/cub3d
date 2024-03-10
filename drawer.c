@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 10:45:24 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 10:50:09 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/10 14:57:31 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	draw_cell(t_ctx *ctx, t_coords c, t_cell_type t)
 			cell->i[frame] = mlx_image_to_window(ctx->mlx, \
 				ctx->assets[frame][t].img[cell->v], c.x * CSIZE, c.y * CSIZE);
 			if (cell->i[frame] < 0)
-				return (-1);
+				return (g_eno = E_IMG, -1);
 			ctx->assets[frame][t].img[cell->v]->enabled =!frame;
 			frame++;
 		}
@@ -64,7 +64,7 @@ int	draw_entity_variant(t_ctx *ctx, t_entity *entity, unsigned int variant)
 			ctx->assets[frame][entity->t].img[variant], \
 			entity->c.x * CSIZE, entity->c.y * CSIZE);
 		if (entity->i[frame][variant] < 0)
-			return (-1);
+			return (g_eno = E_IMG, -1);
 		ctx->assets[frame][entity->t].img[variant]->enabled =!frame;
 		ctx->assets[frame][entity->t].img[variant] \
 			->instances[entity->i[frame][variant]].enabled = !variant;

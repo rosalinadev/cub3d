@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 02:39:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 05:48:49 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/09 11:18:25 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,12 @@ bool	init_entities(t_map *map, t_coords c, unsigned int depth)
 		if (++c.x == map->width)
 			c.x = (c.y++, 0);
 	if (c.y == map->height)
-		return (map->num_entities = depth,
-			map->entities = ft_calloc(depth, sizeof(t_entity)), true);
+	{
+		map->entities = ft_calloc(depth, sizeof(t_entity));
+		if (map->entities == NULL)
+			return (g_eno = E_MEM, false);
+		return (map->num_entities = depth, true);
+	}
 	if (!init_entities(map, (t_coords){(c.x + 1) * (c.x + 1 != map->width),
 			c.y + (c.x + 1 == map->width)}, depth + 1))
 		return (false);
@@ -30,7 +34,6 @@ bool	init_entities(t_map *map, t_coords c, unsigned int depth)
 	return (true);
 }
 
-// TODO decide on collisions
 void	set_map_weights(t_map *map, t_coords c, int depth)
 {
 	if (map->c[c.y][c.x].t == C_WALL

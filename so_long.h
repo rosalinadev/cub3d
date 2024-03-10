@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 16:35:34 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/10 16:30:03 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,25 @@
 # include "MLX42/MLX42.h"
 # include "libft.h"
 # include "ft_bitwise.h"
+
+typedef enum e_errno
+{
+	E_FILENAME = 1,
+	E_OPEN,
+	E_MEM,
+	E_MAPEMPTY,
+	E_MAPWIDTH,
+	E_MAPEDGES,
+	E_MAPCONTENTS,
+	E_EXITREACH,
+	E_COLLECTREACH,
+	E_MLX,
+	E_FONT,
+	E_PNG,
+	E_IMG,
+}	t_errno;
+
+extern t_errno			g_eno;
 
 typedef union color
 {
@@ -208,6 +227,7 @@ bool		draw_str(mlx_image_t *img, t_font *font, const char *str,
 				t_coords pos);
 
 // loop.c
+void		putnbr_buf(unsigned int n, char b[11]);
 void		ft_hook_loop(void *param);
 
 #endif

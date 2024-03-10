@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 17:43:42 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/10 16:09:08 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static inline t_flags	interpret_input(t_flags *flags)
 	return (out | (*flags & last_flags & 0b1111 << H_UP));
 }
 
-static inline void	putnbr_buf(unsigned int n, char b[11])
+void	putnbr_buf(unsigned int n, char b[11])
 {
 	int		i;
 	int		j;

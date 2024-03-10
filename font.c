@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 00:35:51 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 17:41:02 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/10 15:21:32 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ bool	init_font(t_ctx *ctx)
 
 	ctx->font.img = mlx_load_png("hall-fetica-bold.png");
 	if (ctx->font.img == NULL)
-		return (ft_putstr_fd("Failed to load font\n", STDERR_FILENO), false);
+		return (g_eno = E_FONT, false);
 	ctx->counter = mlx_new_image(ctx->mlx, ctx->width, ctx->height);
 	ctx->gametext = mlx_new_image(ctx->mlx, ctx->width, ctx->height);
 	if (ctx->counter == NULL || ctx->gametext == NULL
 		|| mlx_image_to_window(ctx->mlx, ctx->counter, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->gametext, 0, 0) < 0)
-		return (mlx_delete_texture(ctx->font.img), false);
+		return (g_eno = E_IMG, mlx_delete_texture(ctx->font.img), false);
 	ctx->font.sc = 1;
 	if (ctx->map->width >= 5)
 		ctx->font.sc = 2;
@@ -60,8 +60,6 @@ bool	init_font(t_ctx *ctx)
 	while (c <= '~')
 		ctx->font.meta[c++ - ' '] = (t_char){(t_coords){p.x, p.y - FHEIGHT}, \
 			{get_char_width_skip(ctx->font.img, &p), FHEIGHT}};
-	if (false)
-		return (false);
 	return (true);
 }
 

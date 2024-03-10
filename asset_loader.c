@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 17:50:18 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/10 16:28:30 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,20 @@ static const t_asset	g_asset_meta[C_MAXTYPE] = {\
 	[C_ENEMY] = {{{"it", {0x82261CFF}}}, true, true}, \
 };
 
-static int	get_path(char path[100], t_cell_type type, int variant, int frame)
+static void	get_path(char path[100], t_cell_type type, int variant, int frame)
 {
-	char	*tmp;
+	char	num[11];
 
 	ft_bzero(path, 100);
 	ft_strlcat(path, "sprites/", 100);
 	ft_strlcat(path, g_asset_meta[type].s_meta.name, 100);
 	ft_strlcat(path, "_", 100);
-	tmp = ft_itoa(variant);
-	if (tmp == NULL)
-		return (-1);
-	ft_strlcat(path, tmp, 100);
-	free(tmp);
+	putnbr_buf(variant, num);
+	ft_strlcat(path, num, 100);
 	ft_strlcat(path, "_", 100);
-	tmp = ft_itoa(frame);
-	if (tmp == NULL)
-		return (-1);
-	ft_strlcat(path, tmp, 100);
-	free(tmp);
+	putnbr_buf(frame, num);
+	ft_strlcat(path, num, 100);
 	ft_strlcat(path, ".png", 100);
-	return (0);
 }
 
 static void	recolor_texture(mlx_texture_t *tex, t_col col)
@@ -76,18 +69,18 @@ static int	load_variant(t_ctx *ctx, t_cell_type type, int frame, int variant)
 	mlx_texture_t	*texture;
 	mlx_image_t		*image;
 
-	if (get_path(path, type, variant, frame + 1) < 0)
-		return (-1);
+	get_path(path, type, variant, frame + 1);
 	texture = mlx_load_png(path);
 	if (texture == NULL)
-		return (ft_fprintf(stderr, "Failed to load '%s'\n", path), -1);
+		return (g_eno = E_PNG, -1);
 	recolor_texture(texture, g_asset_meta[type].s_meta.color);
 	image = mlx_texture_to_image(ctx->mlx, texture);
-	mlx_resize_image(image, image->width * 2, image->height * 2);
-	ctx->assets[frame][type].img[variant] = image;
 	mlx_delete_texture(texture);
-	if (!ctx->assets[frame][type].img[variant])
-		return (-1);
+	if (image == NULL)
+		return (g_eno = E_MEM, -1);
+	if (!mlx_resize_image(image, CSIZE, CSIZE))
+		return (g_eno = E_MEM, -1);
+	ctx->assets[frame][type].img[variant] = image;
 	return (0);
 }
 
