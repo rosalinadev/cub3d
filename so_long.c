@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/10 16:19:53 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:32:05 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	parse_args(t_ctx *ctx, int argc, char *argv[])
 		return (ft_printf("Usage: %s <map.ber>\n\n" \
 							"Keybindings:\n" \
 							"	WASD: move (or HJKL or arrows)\n" \
-							"	Space: pause\n", \
+							"	Space: pause\n" \
 							"	Escape: exit\n", \
 							*argv), \
 						-1);

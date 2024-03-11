@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/10 16:19:59 by rvandepu         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:32:35 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ int	load_map(t_ctx *ctx)
 		return (free(ctx->map), close(fd), -1);
 	close(fd);
 	if (!ctx->map->width || !ctx->map->height)
-		return (g_eno = E_MAPEMPTY, -1);
+		return (g_eno = E_MAPEMPTY, free_map(ctx->map), -1);
 	if (parse_types(ctx->map, 0) < 0)
 		return (free_map(ctx->map), -1);
 	if (!prevalidate_set_variants(ctx->map))
