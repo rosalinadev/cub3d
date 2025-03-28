@@ -1,0 +1,6 @@
+# vim:set ft=yaml sw=2 ts=2 et:
+CompileFlags:
+  Add:
+    - "-I../include"
+    - "-I../libft"
+    - "-I../MLX42/include"

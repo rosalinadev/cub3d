@@ -6,11 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 18:11:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/10 15:37:55 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/03/28 02:50:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "cub3d.h"
 
 bool	alloc_mem(t_map *map, unsigned int depth)
 {

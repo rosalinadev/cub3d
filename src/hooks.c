@@ -6,11 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 23:12:02 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 11:54:17 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/03/28 02:50:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "cub3d.h"
 
 static const unsigned char	g_is_pressed[350] = {\
 	[MLX_KEY_H] = H_LEFT, \

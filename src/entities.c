@@ -6,11 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 02:39:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/09 11:18:25 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/03/28 02:50:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "cub3d.h"
 
 bool	init_entities(t_map *map, t_coords c, unsigned int depth)
 {

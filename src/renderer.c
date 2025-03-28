@@ -6,11 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 18:59:35 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/07 10:50:08 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/03/28 02:50:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "cub3d.h"
 
 static inline void	set_frame(t_asset *asset, bool enabled)
 {

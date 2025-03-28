@@ -6,11 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/10 16:28:30 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/03/28 02:49:46 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "cub3d.h"
 
 static const t_asset	g_asset_meta[C_MAXTYPE] = {\
 	[C_WALL] = {{{"wall", {0x293141FF}}}, false, true}, \

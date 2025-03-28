@@ -6,11 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 10:45:24 by rvandepu          #+#    #+#             */
-/*   Updated: 2024/03/10 14:57:31 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/03/28 02:50:15 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "cub3d.h"
 
 static int	draw_cell(t_ctx *ctx, t_coords c, t_cell_type t)
 {

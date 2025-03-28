@@ -6,29 +6,33 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2024/03/07 11:03:17 by rvandepu         ###   ########.fr        #
+#    Updated: 2025/03/28 02:46:47 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME := so_long
+NAME := cub3D
 
-FILES  := $(NAME) \
-		  map_loader \
-		  map_utils \
-		  asset_loader \
-		  entities \
-		  movement \
-		  hooks \
-		  drawer \
-		  renderer \
-		  font \
-		  loop \
+SRC  := main.c \
+		map_loader.c \
+		map_utils.c \
+		asset_loader.c \
+		entities.c \
+		movement.c \
+		hooks.c \
+		drawer.c \
+		renderer.c \
+		font.c \
+		loop.c \
 
-OBJ := $(FILES:%=%.o)
+SRC_DIR := src
+SRC     := $(SRC:%=$(SRC_DIR)/%)
+OBJ_DIR := build
+OBJ     := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-CFLAGS += -Wall -Wextra -Werror
+CPPFLAGS += -Iinclude
+CFLAGS   += -Wall -Wextra -Werror
 
-# https://github.com/remty5/libft
+# https://github.com/rosalinadev/libft
 LIBFT_DIR	:= libft
 LIBFT		:= libft.a
 LIBFT_PATH	:= $(LIBFT_DIR)/$(LIBFT)
@@ -45,31 +49,36 @@ CFLAGS		+= -pthread
 LDFLAGS		+= -L$(LIBMLX_DIR)/build
 LDLIBS		+= -lmlx42 -ldl -lglfw -lpthread -lm
 
-.PHONY: all clean fclean re test sprites
+.PHONY: all clean fclean re test
 
 all: $(NAME)
 
 clean:
 	$(MAKE) -C $(LIBFT_DIR) fclean
 	$(RM) -r $(LIBMLX_DIR)/build
-	$(RM) $(OBJ)
+	$(RM) -r $(OBJ_DIR)
 
 fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
 
-test: CFLAGS += -g
+test: CFLAGS += -g -Wno-error
 test: re
 
-sprites:
-	ln -f -s -T /sgoinfre/goinfre/Perso/rvandepu/baba-is-you-sprites sprites
+$(OBJ_DIR):
+	mkdir -p $@
 
 $(LIBFT_PATH):
-	$(MAKE) -C $(LIBFT_DIR) $(LIBFT) -j $$(nproc)
+	$(MAKE) -s -C $(LIBFT_DIR) $(LIBFT) -j $$(nproc)
 
 $(LIBMLX_PATH):
-	cmake -S $(LIBMLX_DIR) -B $(LIBMLX_DIR)/build
+	cmake -Wno-dev -S $(LIBMLX_DIR) -B $(LIBMLX_DIR)/build
 	$(MAKE) -C $(LIBMLX_DIR)/build -j $$(nproc)
 
-$(NAME): $(OBJ) | $(LIBFT_PATH) $(LIBMLX_PATH)
+# I hate having to do this
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+
+$(NAME): $(OBJ_DIR) $(OBJ) | $(LIBFT_PATH) $(LIBMLX_PATH)
+	$(CC) $(LDFLAGS) $(OBJ) $(LDLIBS) -o $@
