@@ -6,15 +6,16 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 00:35:51 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/03/28 02:50:17 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/04/02 08:15:29 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "error.h"
+#include "font.h"
 
 #define FHEIGHT 16
 
-static inline int	get_char_width_skip(mlx_texture_t *img, t_coords *c)
+static inline int	get_char_width_skip(mlx_texture_t *img, t_vec2u *c)
 {
 	int	w;
 
@@ -36,42 +37,32 @@ static inline int	get_char_width_skip(mlx_texture_t *img, t_coords *c)
 	return (w);
 }
 
-bool	init_font(t_ctx *ctx)
+bool	init_font(t_font *font)
 {
-	t_coords	p;
-	char		c;
+	t_vec2u	p;
+	char	c;
 
-	ctx->font.img = mlx_load_png("hall-fetica-bold.png");
-	if (ctx->font.img == NULL)
-		return (g_eno = E_FONT, false);
-	ctx->counter = mlx_new_image(ctx->mlx, ctx->width, ctx->height);
-	ctx->gametext = mlx_new_image(ctx->mlx, ctx->width, ctx->height);
-	if (ctx->counter == NULL || ctx->gametext == NULL
-		|| mlx_image_to_window(ctx->mlx, ctx->counter, 0, 0) < 0
-		|| mlx_image_to_window(ctx->mlx, ctx->gametext, 0, 0) < 0)
-		return (g_eno = E_IMG, mlx_delete_texture(ctx->font.img), false);
-	ctx->font.sc = 1;
-	if (ctx->map->width >= 5)
-		ctx->font.sc = 2;
-	if (ctx->map->width >= 8)
-		ctx->font.sc = 3;
-	p = (t_coords){0, FHEIGHT};
+	font->img = mlx_load_png("assets/hall-fetica-bold.png");
+	if (font->img == NULL)
+		return (eno(E_FONT), false);
+	font->sc = 2;
+	p = (t_vec2u){0, FHEIGHT};
 	c = ' ';
 	while (c <= '~')
-		ctx->font.meta[c++ - ' '] = (t_char){(t_coords){p.x, p.y - FHEIGHT}, \
-			{get_char_width_skip(ctx->font.img, &p), FHEIGHT}};
+		font->meta[c++ - ' '] = (t_char){(t_vec2u){p.x, p.y - FHEIGHT}, \
+			{get_char_width_skip(font->img, &p), FHEIGHT}};
 	return (true);
 }
 
-static inline void	draw_char(mlx_image_t *i, t_font *f, char c, t_coords p)
+static inline void	draw_char(mlx_image_t *i, t_font *f, char c, t_vec2u p)
 {
-	t_char			*m;
-	t_coords		o;
+	t_char		*m;
+	t_vec2u		o;
 
 	if (c < ' ' || '~' < c)
 		return ;
 	m = &f->meta[c - ' '];
-	o = (t_coords){0, 0};
+	o = (t_vec2u){0, 0};
 	while (o.y < m->s.y * f->sc)
 	{
 		if (f->img->pixels[((m->p.y + o.y / f->sc)
@@ -91,25 +82,25 @@ pixels[((m->p.y + o.y / f->sc) * f->img->width + m->p.x + o.x / f->sc) * 4 + 3];
 	}
 }
 
-t_coords	str_size(t_font *font, const char *str)
+t_vec2u	str_size(t_font *font, const char *str)
 {
-	unsigned int	width;
-	unsigned int	i;
+	uint32_t	width;
+	uint32_t	i;
 
 	width = 0;
 	i = 0;
 	while (' ' <= str[i] && str[i] <= '~')
 		width += font->meta[str[i++] - ' '].s.x;
 	if (!i || str[i])
-		return ((t_coords){0, 0});
+		return ((t_vec2u){0, 0});
 	else
-		return ((t_coords){width * font->sc, FHEIGHT * font->sc});
+		return ((t_vec2u){width * font->sc, FHEIGHT * font->sc});
 }
 
-bool	draw_str(mlx_image_t *img, t_font *font, const char *str, t_coords pos)
+bool	draw_str(mlx_image_t *img, t_font *font, const char *str, t_vec2u pos)
 {
-	unsigned int	i;
-	t_coords		c;
+	uint32_t	i;
+	t_vec2u		c;
 
 	c = str_size(font, str);
 	if (pos.x + c.x >= img->width || pos.y + c.y >= img->height)

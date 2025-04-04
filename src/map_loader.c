@@ -6,148 +6,144 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/03/28 02:50:17 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/04/04 09:30:25 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include "libft.h"
 
-void	free_map(t_map *map)
+#include "error.h"
+#include "map.h"
+
+#define MAP_CHARS       " 01NSEW"
+#define MAP_CHARS_BONUS " 01DXNSEW"
+
+static const t_cell_type	g_type_map[0x100] = {\
+	[' '] = C_OOB, \
+	['0'] = C_EMPTY, \
+	['1'] = C_WALL, \
+	['D'] = C_DOOR, \
+	['X'] = C_SPRITE, \
+	['N'] = C_SPAWN, \
+	['S'] = C_SPAWN, \
+	['E'] = C_SPAWN, \
+	['W'] = C_SPAWN, \
+};
+
+static const t_vec2f		g_facing_map[0x100] = {\
+	['N'] = {0, -1}, \
+	['S'] = {0, 1}, \
+	['E'] = {1, 0}, \
+	['W'] = {-1, 0}, \
+};
+
+static bool	parse_line_pre_alloc(t_map *map, char *line)
 {
-	unsigned int	i;
+	char	*s;
 
-	if (map)
-	{
-		i = map->height;
-		while (i--)
-		{
-			if (map->r)
-				free(map->r[i]);
-			if (map->c)
-				free(map->c[i]);
-		}
-		if (map->r)
-			free(map->r);
-		if (map->c)
-			free(map->c);
-		if (map->entities)
-			free(map->entities);
-		if (map->mem)
-			free_mem(map);
-		free(map);
-	}
-}
-
-static bool	prevalidate_set_variants(t_map *map)
-{
-	unsigned int	x;
-	unsigned int	y;
-
-	y = map->height;
-	while (y--)
-	{
-		x = map->width;
-		while (x--)
-		{
-			if (map->c[y][x].t == C_WALL)
-			{
-				if (x + 1 < map->width && map->c[y][x + 1].t == C_WALL)
-					map->c[y][x].v = ft_bit_set(map->c[y][x].v, F_WEST);
-				if (y > 0 && map->c[y - 1][x].t == C_WALL)
-					map->c[y][x].v = ft_bit_set(map->c[y][x].v, F_NORTH);
-				if (x > 0 && map->c[y][x - 1].t == C_WALL)
-					map->c[y][x].v = ft_bit_set(map->c[y][x].v, F_EAST);
-				if (y + 1 < map->height && map->c[y + 1][x].t == C_WALL)
-					map->c[y][x].v = ft_bit_set(map->c[y][x].v, F_SOUTH);
-			}
-			else if (!x || x == map->width - 1 || !y || y == map->height - 1)
-				return (g_eno = E_MAPEDGES, false);
-		}
-	}
+	s = ft_strrchr(line, '\n');
+	if (s)
+		*s = '\0';
+	s = MAP_CHARS;
+	if (map->is_bonus)
+		s = MAP_CHARS_BONUS;
+	if (ft_strspn(line, s) != ft_strlen(line))
+		return (eno(E_MAP_CHARS), false);
 	return (true);
 }
 
-static const t_cell_type	g_type_table[0xFF] = {\
-	['0'] = C_EMPTY, \
-	['1'] = C_WALL, \
-	['C'] = C_COLLECTIBLE, \
-	['E'] = C_EXIT, \
-	['P'] = C_PLAYER, \
-	['B'] = C_ENEMY, \
-};
-
-static int	parse_types(t_map *map, unsigned int depth)
+static bool	parse_line(t_map *map, const char *line, t_vec2u pos, bool final)
 {
-	unsigned int	x;
-	t_cell			*cells;
+	static bool	has_spawnpoint;
 
-	if (depth == map->height)
-		return (-((map->c = ft_calloc(map->height, sizeof(char *))) == NULL));
-	cells = ft_calloc(map->width, sizeof(t_cell));
-	if (cells == NULL)
-		return (g_eno = E_MEM, -1);
-	x = map->width;
-	while (x--)
+	while (line[pos.x])
 	{
-		cells[x].t = g_type_table[(unsigned char)map->r[depth][x]];
-		if (!cells[x].t || (cells[x].t == C_PLAYER && map->has_player) \
-							|| (cells[x].t == C_EXIT && map->has_exit))
-			return (g_eno = E_MAPCONTENTS, free(cells), -1);
-		if (cells[x].t == C_PLAYER)
-			map->has_player = true;
-		if (cells[x].t == C_COLLECTIBLE)
-			map->collectibles++;
-		if (cells[x].t == C_EXIT)
-			map->has_exit = true;
+		map->cells[pos.y][pos.x].type = g_type_map[(uint8_t)line[pos.x]];
+		if (map->cells[pos.y][pos.x].type == C_SPAWN)
+		{
+			if (has_spawnpoint)
+				return (eno(E_MAP_SPAWNS), false);
+			map->spawn_pos = pos;
+			map->spawn_facing = g_facing_map[(uint8_t)line[pos.x]];
+			has_spawnpoint = true;
+		}
+		pos.x++;
 	}
-	if (parse_types(map, depth + 1) < 0)
-		return (free(cells), -1);
-	return (map->c[depth] = cells, 0);
+	if (final && !has_spawnpoint)
+		return (eno(E_MAP_SPAWN), false);
+	return (true);
 }
 
-static int	read_map(t_map *map, int fd, int depth)
+static bool	read_map(t_map *map, int fd, int depth)
 {
 	char	*line;
 
 	line = get_next_line(fd);
 	if (line == NULL)
 	{
-		map->r = ft_calloc(depth, sizeof(char *));
-		if (map->r == NULL)
-			return (g_eno = E_MEM, -1);
-		return (map->height = depth, 0);
+		if (depth == 0 || map->size.x == 0)
+			return (eno(E_MAP_EMPTY), false);
+		map->cells = ft_calloc(depth, sizeof(t_cell *));
+		if (map->cells == NULL)
+			return (eno(E_MEM), false);
+		map->cells[0] = ft_calloc(map->size.x * depth, sizeof(t_cell));
+		if (map->cells[0] == NULL)
+			return (eno(E_MEM), free(map->cells), false);
+		return (map->size.y = depth, true);
 	}
-	if (depth == 0)
-		map->width = ft_strlen(line) - 1;
-	else if (ft_strlen(line) - 1 != map->width)
-		return (g_eno = E_MAPWIDTH, free(line), -1);
-	if (read_map(map, fd, depth + 1) < 0)
-		return (free(line), -1);
-	return (map->r[depth] = line, 0);
+	if (!parse_line_pre_alloc(map, line))
+		return (free(line), false);
+	map->size.x = ft_max(2, map->size.x, ft_strlen(line));
+	if (!read_map(map, fd, depth + 1))
+		return (free(line), false);
+	map->cells[depth] = &map->cells[0][depth * map->size.x];
+	if (!parse_line(map, line, (t_vec2u){0, depth}, depth == 0))
+		return (free(line), false);
+	return (free(line), true);
 }
 
-int	load_map(t_ctx *ctx)
+extern inline t_cell	get_cell(t_map *map, t_vec2 pos);
+
+static bool	is_enclosed(t_map *map, t_vec2 pos, bool *mem)
+{
+	static bool	enclosed = true;
+	t_cell_type	type;
+
+	if (!enclosed)
+		return (false);
+	type = get_cell(map, pos).type;
+	if (type == C_OOB)
+		return (enclosed = false);
+	if (type == C_WALL || mem[pos.y * map->size.x + pos.x])
+		return (true);
+	mem[pos.y * map->size.x + pos.x] = true;
+	is_enclosed(map, (t_vec2){pos.x + 1, pos.y}, mem);
+	is_enclosed(map, (t_vec2){pos.x, pos.y + 1}, mem);
+	is_enclosed(map, (t_vec2){pos.x - 1, pos.y}, mem);
+	is_enclosed(map, (t_vec2){pos.x, pos.y - 1}, mem);
+	return (enclosed);
+}
+
+bool	load_map(t_map *map, const char *path)
 {
 	int		fd;
+	bool	*mem;
 
-	fd = open(ctx->path, O_RDONLY);
+	fd = open(path, O_RDONLY);
 	if (fd < 0)
-		return (g_eno = E_OPEN, -1);
-	ctx->map = ft_calloc(1, sizeof(t_map));
-	if (ctx->map == NULL)
-		return (g_eno = E_MEM, close(fd), -1);
-	if (read_map(ctx->map, fd, 0) < 0)
-		return (free(ctx->map), close(fd), -1);
+		return (eno(E_OPEN), false);
+	if (!read_map(map, fd, 0))
+		return (close(fd), free_gnl(), false);
 	close(fd);
-	if (!ctx->map->width || !ctx->map->height)
-		return (g_eno = E_MAPEMPTY, free_map(ctx->map), -1);
-	if (parse_types(ctx->map, 0) < 0)
-		return (free_map(ctx->map), -1);
-	if (!prevalidate_set_variants(ctx->map))
-		return (free_map(ctx->map), -1);
-	if (!init_entities(ctx->map, (t_coords){0, 0}, 0))
-		return (free_map(ctx->map), -1);
-	if (!map_is_valid(ctx->map))
-		return (free_map(ctx->map), -1);
-	return (0);
+	mem = ft_calloc(map->size.x * map->size.y, sizeof(*mem));
+	if (mem == NULL)
+		return (eno(E_MEM), free(map->cells[0]), free(map->cells), false);
+	if (!is_enclosed(map, (t_vec2){map->spawn_pos.x, map->spawn_pos.y}, mem))
+		return (eno(E_MAP_WALLS), free(mem),
+			free(map->cells[0]), free(map->cells), false);
+	free(mem);
+	return (true);
 }
