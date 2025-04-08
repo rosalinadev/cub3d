@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/04 09:30:25 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/04/08 19:18:25 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,13 @@ static bool	parse_line_pre_alloc(t_map *map, char *line)
 static bool	parse_line(t_map *map, const char *line, t_vec2u pos, bool final)
 {
 	static bool	has_spawnpoint;
+	t_cell		*cell;
 
 	while (line[pos.x])
 	{
-		map->cells[pos.y][pos.x].type = g_type_map[(uint8_t)line[pos.x]];
-		if (map->cells[pos.y][pos.x].type == C_SPAWN)
+		cell = get_cell(map, vec2_u2s(pos));
+		cell->type = g_type_map[(uint8_t)line[pos.x]];
+		if (cell->type == C_SPAWN)
 		{
 			if (has_spawnpoint)
 				return (eno(E_MAP_SPAWNS), false);
@@ -86,11 +88,8 @@ static bool	read_map(t_map *map, int fd, int depth)
 	{
 		if (depth == 0 || map->size.x == 0)
 			return (eno(E_MAP_EMPTY), false);
-		map->cells = ft_calloc(depth, sizeof(t_cell *));
+		map->cells = ft_calloc(map->size.x * depth, sizeof(t_cell));
 		if (map->cells == NULL)
-			return (eno(E_MEM), false);
-		map->cells[0] = ft_calloc(map->size.x * depth, sizeof(t_cell));
-		if (map->cells[0] == NULL)
 			return (eno(E_MEM), free(map->cells), false);
 		return (map->size.y = depth, true);
 	}
@@ -99,13 +98,10 @@ static bool	read_map(t_map *map, int fd, int depth)
 	map->size.x = ft_max(2, map->size.x, ft_strlen(line));
 	if (!read_map(map, fd, depth + 1))
 		return (free(line), false);
-	map->cells[depth] = &map->cells[0][depth * map->size.x];
 	if (!parse_line(map, line, (t_vec2u){0, depth}, depth == 0))
 		return (free(line), false);
 	return (free(line), true);
 }
-
-extern inline t_cell	get_cell(t_map *map, t_vec2 pos);
 
 static bool	is_enclosed(t_map *map, t_vec2 pos, bool *mem)
 {
@@ -114,7 +110,7 @@ static bool	is_enclosed(t_map *map, t_vec2 pos, bool *mem)
 
 	if (!enclosed)
 		return (false);
-	type = get_cell(map, pos).type;
+	type = get_cell(map, pos)->type;
 	if (type == C_OOB)
 		return (enclosed = false);
 	if (type == C_WALL || mem[pos.y * map->size.x + pos.x])
@@ -140,10 +136,9 @@ bool	load_map(t_map *map, const char *path)
 	close(fd);
 	mem = ft_calloc(map->size.x * map->size.y, sizeof(*mem));
 	if (mem == NULL)
-		return (eno(E_MEM), free(map->cells[0]), free(map->cells), false);
+		return (eno(E_MEM), free(map->cells), false);
 	if (!is_enclosed(map, (t_vec2){map->spawn_pos.x, map->spawn_pos.y}, mem))
-		return (eno(E_MAP_WALLS), free(mem),
-			free(map->cells[0]), free(map->cells), false);
+		return (eno(E_MAP_WALLS), free(mem), free(map->cells), false);
 	free(mem);
 	return (true);
 }

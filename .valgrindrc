@@ -1,4 +1,3 @@
 --keep-debuginfo=yes
 --leak-check=full
 --show-leak-kinds=all
---suppressions=MLX42/mlx42.supp

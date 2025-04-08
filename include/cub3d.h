@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/04 09:39:16 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/04/08 16:46:33 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,6 @@
 //# include "ft_bitwise.h"
 
 # include "map.h"
-
-/*typedef struct s_entity
-{
-	t_coords		oc;
-	t_coords		c;
-	t_cell_type		t;
-	bool			m;
-	int				i[3][32];
-	unsigned char	f;
-	double			lm;
-}	t_entity;*/
 
 typedef struct s_asset
 {
@@ -74,8 +63,8 @@ typedef struct s_ctx
 	mlx_t		*mlx;
 	mlx_image_t	*bg;
 	t_map		map;
-	t_asset		assets[3][C_MAXTYPE];
-	t_font		font;
+//	t_asset		assets[3][C_MAXTYPE];
+//	t_font		font;
 	mlx_image_t	*counter;
 	mlx_image_t	*gametext;
 	int			width;
@@ -83,6 +72,7 @@ typedef struct s_ctx
 	t_flags		flags;
 }	t_ctx;
 
+/*
 // asset_loader.c
 int			load_assets(t_ctx *ctx);
 
@@ -120,5 +110,6 @@ void		render_entities(t_ctx *ctx, double curr);
 // loop.c
 void		putnbr_buf(unsigned int n, char b[11]);
 void		ft_hook_loop(void *param);
+*/
 
 #endif

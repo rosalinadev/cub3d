@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 03:56:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/04 09:14:23 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/04/08 19:07:16 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,20 @@
 # define MAP_H
 
 # include <stdbool.h>
+# include <stddef.h>
+
 # include "types.h"
+
+typedef struct s_map	t_map;
+typedef struct s_sprite	t_sprite;
+typedef struct s_sprite
+{
+	t_sprite	*next;
+	float		dist;
+}	t_sprite;
+
+// sprites.c
+t_vec2u	sprite_pos(t_map *map, t_sprite *sprite);
 
 typedef enum e_cell_type
 {
@@ -32,32 +45,25 @@ typedef struct s_cell
 	t_cell_type	type;
 	union
 	{
-		bool	door_open;
+		bool		door_open;
+		t_sprite	sprite;
 	};
 }	t_cell;
 
-// TODO sprites :D
 typedef struct s_map
 {
 	t_vec2u	size;
-	t_cell	**cells;
+	t_cell	*cells;
 	t_vec2u	spawn_pos;
 	t_vec2f	spawn_facing;
 	bool	is_bonus;
 }	t_map;
 
 // map_loader.c
-void			free_map(t_map *map);
-bool			load_map(t_map *map, const char *path);
+void	free_map(t_map *map);
+bool	load_map(t_map *map, const char *path);
 
 // map_utils.c
-inline t_cell	get_cell(t_map *map, t_vec2 pos)
-{
-	if (pos.x < 0 || pos.y < 0
-		|| (uint32_t)pos.x >= map->size.x
-		|| (uint32_t)pos.y >= map->size.y)
-		return ((t_cell){.type = C_OOB});
-	return (map->cells[pos.y][pos.x]);
-}
+t_cell	*get_cell(t_map *map, t_vec2 pos);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/04 09:39:53 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/04/08 19:31:40 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 */
 
 // TODO usage text
-// TODO parse _bonus filetype
 static bool	parse_args(t_map *map, int argc, char *argv[])
 {
 	char	*s;
@@ -38,22 +37,21 @@ static bool	parse_args(t_map *map, int argc, char *argv[])
 	if (argv[0] != NULL)
 		s = argv[0];
 	if (argc < 2)
-		return (printf("Usage: %s <map."MAP_EXT">\n\n" \
+		return (printf("Usage: %s map"MAP_EXT"(_bonus)\n\n" \
 						"Keybindings:\n" \
-						"\tWASD: move (or HJKL or arrows)\n" \
-						"\tSpace: pause\n" \
+						"\tWASD: move\n" \
+						"\tMouse: look left/right\n" \
 						"\tEscape: exit\n", \
-						s), false);
-	s = ft_strrchr(argv[1], '.');
-	if (s == NULL || (ft_strcmp(s, "."MAP_EXT) != 0
-			&& ft_strcmp(s, "."MAP_EXT"_bonus") != 0))
+						s), eno(E__NOPRINT), false);
+	s = ft_strrchr(argv[1], MAP_EXT[0]);
+	if (s == NULL || (ft_strcmp(s, MAP_EXT) != 0 \
+				&& ft_strcmp(s, MAP_EXT"_bonus") != 0))
 		return (eno(E_MAP_EXT), false);
-	if (ft_strcmp(s, "."MAP_EXT"_bonus") == 0)
-		map->is_bonus = true;
+	map->is_bonus = ft_strcmp(s, MAP_EXT"_bonus") == 0;
 	return (true);
 }
 
-static int	init_win(t_ctx *ctx)
+/*static int	init_win(t_ctx *ctx)
 {
 	ctx->width = ctx->map->width * CSIZE;
 	ctx->height = ctx->map->height * CSIZE;
@@ -69,7 +67,7 @@ static int	init_win(t_ctx *ctx)
 	mlx_key_hook(ctx->mlx, &ft_hook_key, ctx);
 	mlx_loop_hook(ctx->mlx, &ft_hook_loop, ctx);
 	return (0);
-}
+}*/
 
 // FIXME:
 //  - refactor everything into modular code
@@ -96,6 +94,14 @@ int	main(int argc, char *argv[])
 		return (err_p(1, "While parsing arguments"), EXIT_FAILURE);
 	if (!load_map(&ctx.map, argv[1]))
 		return (err_p(1, "While loading map"), EXIT_FAILURE);
+	t_vec2u (pos) = sprite_pos(&ctx.map,
+		&get_cell(&ctx.map, (t_vec2){5, 2})->sprite);
+	printf("sprite x:%u y:%u\n", pos.x, pos.y);
+	printf("width:%u height:%u\n", ctx.map.size.x, ctx.map.size.y);
+	printf("spawn pos x:%u y:%u\n", ctx.map.spawn_pos.x, ctx.map.spawn_pos.y);
+	printf("spawn dir x:%f y:%f\n", ctx.map.spawn_facing.x,
+		ctx.map.spawn_facing.y);
+	printf("is bonus: %d\n", ctx.map.is_bonus);
 	/*
 	if (init_win(&ctx) < 0)
 		return (free_map(ctx.map), printerr(), EXIT_FAILURE);
@@ -109,5 +115,6 @@ int	main(int argc, char *argv[])
 	mlx_terminate(ctx.mlx);
 	free_map(ctx.map);
 	*/
+	free(ctx.map.cells);
 	return (EXIT_SUCCESS);
 }

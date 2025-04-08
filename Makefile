@@ -6,7 +6,7 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2025/03/28 02:46:47 by rvandepu         ###   ########.fr        #
+#    Updated: 2025/04/08 19:20:59 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,14 +15,10 @@ NAME := cub3D
 SRC  := main.c \
 		map_loader.c \
 		map_utils.c \
-		asset_loader.c \
-		entities.c \
-		movement.c \
-		hooks.c \
-		drawer.c \
-		renderer.c \
-		font.c \
-		loop.c \
+		sprites.c \
+\
+		type_utils.c \
+		error.c \
 
 SRC_DIR := src
 SRC     := $(SRC:%=$(SRC_DIR)/%)
@@ -55,7 +51,8 @@ all: $(NAME)
 
 clean:
 	$(MAKE) -C $(LIBFT_DIR) fclean
-	$(RM) -r $(LIBMLX_DIR)/build
+	# FIXME uncomment or find way to build faster (esp. on WSL)
+	#$(RM) -r $(LIBMLX_DIR)/build
 	$(RM) -r $(OBJ_DIR)
 
 fclean: clean

@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   type_utils.c                                       :+:      :+:    :+:   */
+/*   map_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 10:52:15 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/08 19:17:51 by rvandepu         ###   ########.fr       */
+/*   Created: 2025/04/08 19:03:51 by rvandepu          #+#    #+#             */
+/*   Updated: 2025/04/08 19:21:34 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
+#include "map.h"
 
-#include "types.h"
-
-t_vec2	vec2_floor(t_vec2f vec)
+t_cell	*get_cell(t_map *map, t_vec2 pos)
 {
-	return ((t_vec2){floorf(vec.x), floorf(vec.y)});
-}
+	static const t_cell	g_oob = {.type = C_OOB};
 
-t_vec2	vec2_u2s(t_vec2u vec)
-{
-	return ((t_vec2){vec.x, vec.y});
-}
-
-t_vec2u	vec2_s2u(t_vec2 vec)
-{
-	return ((t_vec2u){vec.x, vec.y});
+	if (pos.x < 0 || pos.y < 0
+		|| (uint32_t)pos.x >= map->size.x
+		|| (uint32_t)pos.y >= map->size.y)
+		return ((t_cell *)&g_oob);
+	return (&map->cells[pos.y * map->size.x + pos.x]);
 }
