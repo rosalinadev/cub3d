@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/17 14:07:09 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/18 06:30:05 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,9 @@ int	main(int argc, char *argv[])
 		return (err_p(1, "While parsing arguments"), EXIT_FAILURE);
 	if (!load_map(&ctx.map, argv[1]))
 		return (err_p(1, "While loading map"), EXIT_FAILURE);
+	player_respawn(&ctx.player, &ctx.map);
+	printf("player pos x:%f y:%f\n", ctx.player.pos.x, ctx.player.pos.y);
+	printf("player dir x:%f y:%f\n", ctx.player.dir.x, ctx.player.dir.y);
 	// load assets
 	// load sprites
 	//t_vec2u (pos) = sprite_pos(&ctx.map,

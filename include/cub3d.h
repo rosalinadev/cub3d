@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/17 07:37:46 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/18 05:24:08 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,14 @@
 # include "font.h"
 # include "input.h"
 # include "map.h"
+# include "player.h"
 # include "types.h"
 
 typedef struct s_ctx
 {
 	char		*path;
 	t_map		map;
+	t_player	player;
 	t_asset		assets[A__SIZE];
 	t_font		font;
 	mlx_t		*mlx;

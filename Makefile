@@ -6,7 +6,7 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2025/06/17 08:49:00 by rvandepu         ###   ########.fr        #
+#    Updated: 2025/06/18 06:21:53 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,10 @@ SRC  := main.c \
 		hooks.c \
 		map_loader.c \
 		map_utils.c \
+		player.c \
 		asset_loader.c \
 		sprites.c \
+		debug.c \
 		\
 		font.c \
 		type_utils.c \

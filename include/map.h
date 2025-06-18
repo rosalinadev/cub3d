@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 03:56:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/17 07:23:34 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/18 05:37:57 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,6 @@ bool	load_map(t_map *map, const char *path);
 
 // map_utils.c
 t_cell	*get_cell(t_map *map, t_vec2 pos);
+bool	collides(t_cell *cell);
 
 #endif

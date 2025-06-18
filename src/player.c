@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 02:20:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 03:59:46 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/18 05:49:21 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ void	player_respawn(t_player *player, t_map *map)
 // set fov to 0 to keep previous fov
 void	player_set_fov(t_player *player, float fov)
 {
-	float	f;
+	float	s;
 
 	if (fov)
 		player->fov = fov;
-	f = tanf(player->fov * M_PI / 180.0 / 2.0);
-	player->cam = (t_vec2f){player->dir.y * f, -player->dir.x * f};
+	s = tanf(player->fov * M_PI / 180.0 / 2.0);
+	player->cam = (t_vec2f){player->dir.y * s, -player->dir.x * s};
 }

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:03:51 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/17 07:23:29 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/18 05:07:58 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,10 @@ t_cell	*get_cell(t_map *map, t_vec2 pos)
 		|| pos.y < 0 || map->size.y <= (uint32_t)pos.y)
 		return ((t_cell *)&g_oob);
 	return (&map->cells[pos.y * map->size.x + pos.x]);
+}
+
+bool	collides(t_cell *cell)
+{
+	return (cell->type == C_WALL
+		|| (cell->type == C_DOOR && cell->door_open));
 }

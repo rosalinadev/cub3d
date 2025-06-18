@@ -6,14 +6,14 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/17 13:34:21 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/18 06:53:25 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_bitwise.h"
 
 #include "cub3d.h"
-#include "libft.h"
+#include "defaults.h"
 
 /*static inline void	draw_movecount(t_ctx *ctx)
 {
@@ -39,38 +39,52 @@
 	}
 }*/
 
-#define DBG1 "uptime: "
-#define DBG2 "\nhi"
-
-// TODO replace with fps or something of the sort,
-//      F3-like overlay is unimportant
-static inline void	draw_debug(t_ctx *ctx)
+static void	handle_movement(t_ctx *ctx, double delta)
 {
-	t_vec2u	c;
-	char	str[sizeof(DBG1) + 11 + sizeof(DBG2) + 1];
-	char	b[12];
+	t_vec2f			newpos;
+	t_vec2f			mov_scaled;
 
-	ft_bzero(ctx->debug->pixels, ctx->debug->width * ctx->debug->height * 4);
-	ft_bzero(str, sizeof(str));
-	ft_strlcat(str, DBG1, sizeof(str));
-	ft_itoa_buf(mlx_get_time(), b);
-	ft_strlcat(str, b, sizeof(str));
-	ft_strlcat(str, DBG2, sizeof(str));
-	c = str_size(&ctx->font, str);
-	ft_printf("str:%s b:%s\nsize x:%u y:%u\n", str, b, c.x, c.y);
-	if (c.x)
-		draw_str(ctx->debug, &ctx->font, str, (t_vec2u){0, 0});
+	if (ctx->kb & 0b11 << H_LOOKLEFT)
+	{
+		if (ft_bit_check(ctx->kb, H_LOOKLEFT))
+			vec2f_rotate(&ctx->player.dir, -ROT_SPEED * delta);
+		if (ft_bit_check(ctx->kb, H_LOOKRIGHT))
+			vec2f_rotate(&ctx->player.dir, +ROT_SPEED * delta);
+		player_set_fov(&ctx->player, 0);
+	}
+	if (!(ctx->kb & 0b1111 << H_FORWARDS))
+		return ;
+	newpos = ctx->player.pos;
+	mov_scaled = vec2f_scale(&ctx->player.dir, MOV_SPEED * delta);
+	if (ft_bit_check(ctx->kb, H_FORWARDS))
+		newpos = vec2f_add(&newpos, &mov_scaled);
+	if (ft_bit_check(ctx->kb, H_BACKWARDS))
+		newpos = vec2f_sub(&newpos, &mov_scaled);
+	if (ft_bit_check(ctx->kb, H_LEFT))
+		newpos = vec2f_add(&newpos, &((t_vec2f){-mov_scaled.y, mov_scaled.x}));
+	if (ft_bit_check(ctx->kb, H_RIGHT))
+		newpos = vec2f_add(&newpos, &((t_vec2f){mov_scaled.y, -mov_scaled.x}));
+	if (!collides(get_cell(&ctx->map, vec2f_floor(newpos))))
+		ctx->player.pos = newpos;
 }
+
+void	draw_debug(t_ctx *ctx);
 
 static inline void	render_frame(t_ctx *ctx)
 {
-	static double	last_time = -1;
+	static double	last_move = -1;
+	static double	last_frame = -1;
 	double			time;
 
 	time = mlx_get_time();
-	if (time - last_time >= 1)
+	if (time - last_move >= 0.001)
 	{
-		last_time = time;
+		handle_movement(ctx, time - last_move);
+		last_move = time;
+	}
+	if (time - last_frame >= 0.02)
+	{
+		last_frame = time;
 		draw_debug(ctx);
 	}
 }
