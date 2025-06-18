@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 06:53:25 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:06:03 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 	}
 }*/
 
+// FIXME handle movement along each axis independently to stop getting stuck
 static void	handle_movement(t_ctx *ctx, double delta)
 {
 	t_vec2f			newpos;
@@ -57,20 +58,21 @@ static void	handle_movement(t_ctx *ctx, double delta)
 	newpos = ctx->player.pos;
 	mov_scaled = vec2f_scale(&ctx->player.dir, MOV_SPEED * delta);
 	if (ft_bit_check(ctx->kb, H_FORWARDS))
-		newpos = vec2f_add(&newpos, &mov_scaled);
+		newpos = vec2f_add(newpos, mov_scaled);
 	if (ft_bit_check(ctx->kb, H_BACKWARDS))
-		newpos = vec2f_sub(&newpos, &mov_scaled);
+		newpos = vec2f_sub(newpos, mov_scaled);
 	if (ft_bit_check(ctx->kb, H_LEFT))
-		newpos = vec2f_add(&newpos, &((t_vec2f){-mov_scaled.y, mov_scaled.x}));
+		newpos = vec2f_add(newpos, ((t_vec2f){mov_scaled.y, -mov_scaled.x}));
 	if (ft_bit_check(ctx->kb, H_RIGHT))
-		newpos = vec2f_add(&newpos, &((t_vec2f){mov_scaled.y, -mov_scaled.x}));
+		newpos = vec2f_add(newpos, ((t_vec2f){-mov_scaled.y, mov_scaled.x}));
 	if (!collides(get_cell(&ctx->map, vec2f_floor(newpos))))
 		ctx->player.pos = newpos;
 }
 
+bool	render_screen(mlx_image_t *img, t_map *map, t_player *player);
 void	draw_debug(t_ctx *ctx);
 
-static inline void	render_frame(t_ctx *ctx)
+static inline void	tick(t_ctx *ctx)
 {
 	static double	last_move = -1;
 	static double	last_frame = -1;
@@ -82,9 +84,10 @@ static inline void	render_frame(t_ctx *ctx)
 		handle_movement(ctx, time - last_move);
 		last_move = time;
 	}
-	if (time - last_frame >= 0.02)
+	if (time - last_frame >= 0.01)
 	{
 		last_frame = time;
+		render_screen(ctx->disp, &ctx->map, &ctx->player);
 		draw_debug(ctx);
 	}
 }
@@ -113,7 +116,7 @@ void	hook_loop(void *param)
 	}
 	render_entities(c, mlx_get_time());
 	draw_movecount(c);*/
-	render_frame(c);
+	tick(c);
 	if (ft_bit_check(c->kb, P_QUIT))
 		mlx_close_window(c->mlx);
 }

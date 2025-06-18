@@ -6,11 +6,12 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 06:30:05 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:10:52 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "MLX42/MLX42.h"
 #include "libft.h"
 
 #include "cub3d.h"
@@ -42,13 +43,22 @@ static bool	parse_args(t_map *map, int argc, char *argv[])
 	return (true);
 }
 
+// TODO pull ceil and floor colors from metadata
 static bool	init_img(t_ctx *ctx)
 {
+	mlx_image_t	*bg;
+
+	bg = mlx_new_image(ctx->mlx, 1, 2);
 	ctx->disp = mlx_new_image(ctx->mlx, ctx->size.x, ctx->size.y);
 	ctx->debug = mlx_new_image(ctx->mlx, ctx->size.x, ctx->size.y);
-	if (!ctx->disp || !ctx->debug)
+	if (!bg || !ctx->disp || !ctx->debug)
 		return (eno(E_IMG), false);
-	if (mlx_image_to_window(ctx->mlx, ctx->disp, 0, 0) < 0
+	mlx_put_pixel(bg, 0, 0, 0x808080FF);
+	mlx_put_pixel(bg, 0, 1, 0x404040FF);
+	if (!mlx_resize_image(bg, ctx->size.x, ctx->size.y))
+		return (eno(E_IMG), false);
+	if (mlx_image_to_window(ctx->mlx, bg, 0, 0) < 0
+		|| mlx_image_to_window(ctx->mlx, ctx->disp, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->debug, 0, 0) < 0)
 		return (eno(E_DISP), false);
 	if (!init_font(&ctx->font))
