@@ -1,26 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   defaults.h                                         :+:      :+:    :+:   */
+/*   assets.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 05:39:29 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 03:40:23 by rvandepu         ###   ########.fr       */
+/*   Created: 2025/04/10 18:39:48 by rvandepu          #+#    #+#             */
+/*   Updated: 2025/06/17 08:17:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEFAULTS_H
-# define DEFAULTS_H
+#ifndef ASSETS_H
+# define ASSETS_H
 
-# define NAME "cub3D"
-# define MAP_EXT ".cub"
+# include "MLX42/MLX42.h"
 
-# define ERR_PRE "Error\n"
+typedef enum e_asset_id
+{
+	A__FIRST = 0,
+	A_N = A__FIRST,
+	A_W,
+	A_S,
+	A_E,
+	A__SIZE
+}	t_asset_id;
 
-# define START_FULLSCREEN false
-# define WIDTH 1920
-# define HEIGHT 1080
-# define FOV 90
+typedef struct s_asset
+{
+	char			*path;
+	mlx_texture_t	*tex;
+}	t_asset;
+
+// asset_loader.c
+void	free_assets(t_asset assets[A__SIZE]);
+bool	load_assets(t_asset assets[A__SIZE]);
 
 #endif

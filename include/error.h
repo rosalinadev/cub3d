@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 04:46:54 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/04 07:54:46 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/17 13:41:55 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,18 @@ typedef enum e_eno
 	E__UNSPECIFIED = 0,
 	E_MEM,
 	E_OPEN,
-	E_FONT,
 	E_MAP_EXT,
 	E_MAP_EMPTY,
 	E_MAP_CHARS,
 	E_MAP_SPAWN,
 	E_MAP_SPAWNS,
 	E_MAP_WALLS,
+	E_BONUS,
+	E_FONT,
+	E_MLX,
+	E_TEX,
+	E_IMG,
+	E_DISP,
 	E__MAX
 }	t_eno;
 

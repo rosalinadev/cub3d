@@ -1,26 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   defaults.h                                         :+:      :+:    :+:   */
+/*   input.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 05:39:29 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 03:40:23 by rvandepu         ###   ########.fr       */
+/*   Created: 2025/04/10 19:09:28 by rvandepu          #+#    #+#             */
+/*   Updated: 2025/05/09 16:22:28 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEFAULTS_H
-# define DEFAULTS_H
+#ifndef INPUT_H
+# define INPUT_H
 
-# define NAME "cub3D"
-# define MAP_EXT ".cub"
+# include <stdint.h>
 
-# define ERR_PRE "Error\n"
+# include "MLX42/MLX42.h"
 
-# define START_FULLSCREEN false
-# define WIDTH 1920
-# define HEIGHT 1080
-# define FOV 90
+typedef uint32_t	t_kb;
+typedef enum e_kb_bit
+{
+	H_FORWARDS = 1,
+	H_BACKWARDS,
+	H_LEFT,
+	H_RIGHT,
+	H_LOOKLEFT,
+	H_LOOKRIGHT,
+	P_QUIT,
+	P_MINIMAP,
+}	t_kb_bit;
+
+void	hook_key(mlx_key_data_t keydata, void *param);
 
 #endif

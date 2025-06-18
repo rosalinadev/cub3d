@@ -1,26 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   defaults.h                                         :+:      :+:    :+:   */
+/*   raycast.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 05:39:29 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 03:40:23 by rvandepu         ###   ########.fr       */
+/*   Created: 2025/06/17 13:49:01 by rvandepu          #+#    #+#             */
+/*   Updated: 2025/06/17 13:49:56 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEFAULTS_H
-# define DEFAULTS_H
-
-# define NAME "cub3D"
-# define MAP_EXT ".cub"
-
-# define ERR_PRE "Error\n"
-
-# define START_FULLSCREEN false
-# define WIDTH 1920
-# define HEIGHT 1080
-# define FOV 90
+#ifndef RAYCAST_H
+# define RAYCAST_H
 
 #endif

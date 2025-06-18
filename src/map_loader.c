@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/08 19:18:25 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/18 04:02:09 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,24 @@
 #define MAP_CHARS       " 01NSEW"
 #define MAP_CHARS_BONUS " 01DXNSEW"
 
-static const t_cell_type	g_type_map[0x100] = {\
-	[' '] = C_OOB, \
-	['0'] = C_EMPTY, \
-	['1'] = C_WALL, \
-	['D'] = C_DOOR, \
-	['X'] = C_SPRITE, \
-	['N'] = C_SPAWN, \
-	['S'] = C_SPAWN, \
-	['E'] = C_SPAWN, \
-	['W'] = C_SPAWN, \
+static const t_cell_type	g_type_map[0x100] = {
+[' '] = C_OOB,
+['0'] = C_EMPTY,
+['1'] = C_WALL,
+['D'] = C_DOOR,
+['X'] = C_SPRITE,
+['N'] = C_SPAWN,
+['S'] = C_SPAWN,
+['E'] = C_SPAWN,
+['W'] = C_SPAWN,
 };
 
+// these shouldn't be scaled
 static const t_vec2f		g_facing_map[0x100] = {\
-	['N'] = {0, -1}, \
-	['S'] = {0, 1}, \
-	['E'] = {1, 0}, \
-	['W'] = {-1, 0}, \
+['N'] = {0, -1},
+['S'] = {0, 1},
+['E'] = {1, 0},
+['W'] = {-1, 0},
 };
 
 static bool	parse_line_pre_alloc(t_map *map, char *line)
@@ -131,6 +132,7 @@ bool	load_map(t_map *map, const char *path)
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 		return (eno(E_OPEN), false);
+	// TODO parse map metadata
 	if (!read_map(map, fd, 0))
 		return (close(fd), free_gnl(), false);
 	close(fd);

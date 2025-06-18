@@ -6,18 +6,23 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2025/04/08 19:20:59 by rvandepu         ###   ########.fr        #
+#    Updated: 2025/06/17 08:49:00 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME := cub3D
 
 SRC  := main.c \
+		loop.c \
+		hooks.c \
 		map_loader.c \
 		map_utils.c \
+		asset_loader.c \
 		sprites.c \
-\
+		\
+		font.c \
 		type_utils.c \
+		vec_utils.c \
 		error.c \
 
 SRC_DIR := src

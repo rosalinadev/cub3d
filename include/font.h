@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 07:26:09 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/02 08:15:57 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/17 08:13:09 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ typedef struct s_char
 
 typedef struct s_font
 {
-	mlx_texture_t	*img;
+	mlx_texture_t	*tex;
 	t_char			meta['~' - ' ' + 1]; // ascii size
 	unsigned char	sc;
 }	t_font;

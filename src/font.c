@@ -6,9 +6,11 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 00:35:51 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/02 08:15:29 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/17 09:16:05 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "libft.h"
 
 #include "error.h"
 #include "font.h"
@@ -42,15 +44,17 @@ bool	init_font(t_font *font)
 	t_vec2u	p;
 	char	c;
 
-	font->img = mlx_load_png("assets/hall-fetica-bold.png");
-	if (font->img == NULL)
+	font->tex = mlx_load_png("assets/hall-fetica-bold.png");
+	if (font->tex == NULL)
 		return (eno(E_FONT), false);
-	font->sc = 2;
+	font->sc = 1;
 	p = (t_vec2u){0, FHEIGHT};
 	c = ' ';
 	while (c <= '~')
-		font->meta[c++ - ' '] = (t_char){(t_vec2u){p.x, p.y - FHEIGHT}, \
-			{get_char_width_skip(font->img, &p), FHEIGHT}};
+		font->meta[c++ - ' '] = ((t_char){
+			{p.x, p.y - FHEIGHT},
+			{get_char_width_skip(font->tex, &p), FHEIGHT}
+			});
 	return (true);
 }
 
@@ -65,17 +69,17 @@ static inline void	draw_char(mlx_image_t *i, t_font *f, char c, t_vec2u p)
 	o = (t_vec2u){0, 0};
 	while (o.y < m->s.y * f->sc)
 	{
-		if (f->img->pixels[((m->p.y + o.y / f->sc)
-					* f->img->width + m->p.x + o.x / f->sc) * 4 + 3])
+		if (f->tex->pixels[((m->p.y + o.y / f->sc)
+					* f->tex->width + m->p.x + o.x / f->sc) * 4 + 3])
 		{
-			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4] = f->img-> \
-pixels[((m->p.y + o.y / f->sc) * f->img->width + m->p.x + o.x / f->sc) * 4];
-			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4 + 1] = f->img-> \
-pixels[((m->p.y + o.y / f->sc) * f->img->width + m->p.x + o.x / f->sc) * 4 + 1];
-			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4 + 2] = f->img-> \
-pixels[((m->p.y + o.y / f->sc) * f->img->width + m->p.x + o.x / f->sc) * 4 + 2];
-			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4 + 3] = f->img-> \
-pixels[((m->p.y + o.y / f->sc) * f->img->width + m->p.x + o.x / f->sc) * 4 + 3];
+			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4] = f->tex-> \
+pixels[((m->p.y + o.y / f->sc) * f->tex->width + m->p.x + o.x / f->sc) * 4];
+			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4 + 1] = f->tex-> \
+pixels[((m->p.y + o.y / f->sc) * f->tex->width + m->p.x + o.x / f->sc) * 4 + 1];
+			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4 + 2] = f->tex-> \
+pixels[((m->p.y + o.y / f->sc) * f->tex->width + m->p.x + o.x / f->sc) * 4 + 2];
+			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4 + 3] = f->tex-> \
+pixels[((m->p.y + o.y / f->sc) * f->tex->width + m->p.x + o.x / f->sc) * 4 + 3];
 		}
 		if (++o.x == m->s.x * f->sc)
 			o.x = (o.y++, 0);
@@ -84,17 +88,31 @@ pixels[((m->p.y + o.y / f->sc) * f->img->width + m->p.x + o.x / f->sc) * 4 + 3];
 
 t_vec2u	str_size(t_font *font, const char *str)
 {
-	uint32_t	width;
-	uint32_t	i;
+	t_vec2u		size;
+	uint32_t	maxwidth;
+	size_t		i;
 
-	width = 0;
+	size = (t_vec2u){0, FHEIGHT};
+	maxwidth = 0;
 	i = 0;
-	while (' ' <= str[i] && str[i] <= '~')
-		width += font->meta[str[i++] - ' '].s.x;
+	while (true)
+	{
+		if (' ' <= str[i] && str[i] <= '~')
+			size.x += font->meta[str[i] - ' '].s.x;
+		else if (str[i] == '\n')
+		{
+			maxwidth = ft_max(2, maxwidth, size.x);
+			size.y += FHEIGHT + 1;
+		}
+		else
+			break ;
+		i++;
+	}
 	if (!i || str[i])
 		return ((t_vec2u){0, 0});
 	else
-		return ((t_vec2u){width * font->sc, FHEIGHT * font->sc});
+		return ((t_vec2u){ft_max(2, maxwidth, size.x) * font->sc,
+			size.y * font->sc});
 }
 
 bool	draw_str(mlx_image_t *img, t_font *font, const char *str, t_vec2u pos)
@@ -107,10 +125,17 @@ bool	draw_str(mlx_image_t *img, t_font *font, const char *str, t_vec2u pos)
 		return (false);
 	c = pos;
 	i = 0;
-	while (' ' <= str[i] && str[i] <= '~')
+	while (true)
 	{
-		draw_char(img, font, str[i], c);
-		c.x += font->meta[str[i] - ' '].s.x * font->sc;
+		if (' ' <= str[i] && str[i] <= '~')
+		{
+			draw_char(img, font, str[i], c);
+			c.x += font->meta[str[i] - ' '].s.x * font->sc;
+		}
+		else if (str[i] == '\n')
+			c = (t_vec2u){0, c.y + (FHEIGHT + 1) * font->sc};
+		else
+			break ;
 		i++;
 	}
 	if (str[i])

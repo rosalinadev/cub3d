@@ -1,26 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   defaults.h                                         :+:      :+:    :+:   */
+/*   player.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 05:39:29 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 03:40:23 by rvandepu         ###   ########.fr       */
+/*   Created: 2025/06/18 02:19:14 by rvandepu          #+#    #+#             */
+/*   Updated: 2025/06/18 04:00:41 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEFAULTS_H
-# define DEFAULTS_H
+#ifndef PLAYER_H
+# define PLAYER_H
 
-# define NAME "cub3D"
-# define MAP_EXT ".cub"
+# include "map.h"
+# include "types.h"
 
-# define ERR_PRE "Error\n"
+typedef struct s_player
+{
+	t_vec2f	pos;
+	t_vec2f	dir;
+	float	fov;
+	// half of fov
+	t_vec2f	cam;
+}	t_player;
 
-# define START_FULLSCREEN false
-# define WIDTH 1920
-# define HEIGHT 1080
-# define FOV 90
+// player.c
+void	player_respawn(t_player *player, t_map *map);
+void	player_set_fov(t_player *player, float fov);
 
 #endif

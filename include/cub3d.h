@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/08 16:46:33 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/17 07:37:46 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,53 +23,24 @@
 
 # include "MLX42/MLX42.h"
 //# include "libft.h"
-//# include "ft_bitwise.h"
 
+# include "assets.h"
+# include "font.h"
+# include "input.h"
 # include "map.h"
-
-typedef struct s_asset
-{
-	union
-	{
-		struct
-		{
-			char	*name;
-			t_col	color;
-		}			s_meta;
-		mlx_image_t	*img[32];
-	};
-	bool	is_entity;
-	bool	has_variants;
-}	t_asset;
-
-typedef unsigned int	t_flags;
-typedef enum e_flag
-{
-	H_UP = 1,
-	H_DOWN,
-	H_LEFT,
-	H_RIGHT,
-	P_UP,
-	P_DOWN,
-	P_LEFT,
-	P_RIGHT,
-	P_PAUSE,
-	P_QUIT,
-}	t_flag;
+# include "types.h"
 
 typedef struct s_ctx
 {
 	char		*path;
-	mlx_t		*mlx;
-	mlx_image_t	*bg;
 	t_map		map;
-//	t_asset		assets[3][C_MAXTYPE];
-//	t_font		font;
-	mlx_image_t	*counter;
-	mlx_image_t	*gametext;
-	int			width;
-	int			height;
-	t_flags		flags;
+	t_asset		assets[A__SIZE];
+	t_font		font;
+	mlx_t		*mlx;
+	t_vec2		size;
+	mlx_image_t	*disp;
+	mlx_image_t	*debug;
+	t_kb		kb;
 }	t_ctx;
 
 /*
@@ -107,9 +78,9 @@ int			update_entity_variant(t_ctx *ctx, t_entity *entity,
 				unsigned int variant);
 void		render_entities(t_ctx *ctx, double curr);
 
-// loop.c
-void		putnbr_buf(unsigned int n, char b[11]);
-void		ft_hook_loop(void *param);
 */
+
+// loop.c
+void		hook_loop(void *param);
 
 #endif

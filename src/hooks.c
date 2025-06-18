@@ -6,55 +6,42 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 23:12:02 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/03/28 02:50:17 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:20:48 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "MLX42/MLX42.h"
+#include "ft_bitwise.h"
 
-static const unsigned char	g_is_pressed[350] = {\
-	[MLX_KEY_H] = H_LEFT, \
-	[MLX_KEY_J] = H_DOWN, \
-	[MLX_KEY_K] = H_UP, \
-	[MLX_KEY_L] = H_RIGHT, \
-	[MLX_KEY_W] = H_UP, \
-	[MLX_KEY_A] = H_LEFT, \
-	[MLX_KEY_S] = H_DOWN, \
-	[MLX_KEY_D] = H_RIGHT, \
-	[MLX_KEY_UP] = H_UP, \
-	[MLX_KEY_LEFT] = H_LEFT, \
-	[MLX_KEY_DOWN] = H_DOWN, \
-	[MLX_KEY_RIGHT] = H_RIGHT, \
+#include "input.h"
+
+#define MAXKEYCODE 350
+
+static const t_kb_bit	g_is_pressed[MAXKEYCODE] = {
+[MLX_KEY_W] = H_FORWARDS,
+[MLX_KEY_A] = H_LEFT,
+[MLX_KEY_S] = H_BACKWARDS,
+[MLX_KEY_D] = H_RIGHT,
+[MLX_KEY_LEFT] = H_LOOKLEFT,
+[MLX_KEY_RIGHT] = H_LOOKRIGHT,
 };
 
-static const unsigned char	g_was_pressed[350] = {\
-	[MLX_KEY_H] = P_LEFT, \
-	[MLX_KEY_J] = P_DOWN, \
-	[MLX_KEY_K] = P_UP, \
-	[MLX_KEY_L] = P_RIGHT, \
-	[MLX_KEY_W] = P_UP, \
-	[MLX_KEY_A] = P_LEFT, \
-	[MLX_KEY_S] = P_DOWN, \
-	[MLX_KEY_D] = P_RIGHT, \
-	[MLX_KEY_UP] = P_UP, \
-	[MLX_KEY_LEFT] = P_LEFT, \
-	[MLX_KEY_DOWN] = P_DOWN, \
-	[MLX_KEY_RIGHT] = P_RIGHT, \
-	[MLX_KEY_SPACE] = P_PAUSE, \
-	[MLX_KEY_ESCAPE] = P_QUIT, \
+static const t_kb_bit	g_was_pressed[MAXKEYCODE] = {
+[MLX_KEY_ESCAPE] = P_QUIT,
+[MLX_KEY_M] = P_MINIMAP,
 };
 
-void	ft_hook_key(mlx_key_data_t keydata, void *param)
+void	hook_key(mlx_key_data_t keydata, void *param)
 {
-	t_ctx	*ctx;
+	t_kb	*kb;
 	bool	down;
 
-	ctx = param;
-	if (keydata.key >= 350)
+	kb = param;
+	if (keydata.key < 0 || MAXKEYCODE <= keydata.key)
 		return ;
 	down = keydata.action != MLX_RELEASE;
 	if (g_is_pressed[keydata.key])
-		ctx->flags = ft_bit_set_to(ctx->flags, g_is_pressed[keydata.key], down);
+		*kb = ft_bit_set_to(*kb, g_is_pressed[keydata.key], down);
 	if (keydata.action == MLX_PRESS && g_was_pressed[keydata.key])
-		ctx->flags = ft_bit_set(ctx->flags, g_was_pressed[keydata.key]);
+		*kb = ft_bit_set(*kb, g_was_pressed[keydata.key]);
 }

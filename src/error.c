@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:46:30 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/04/05 09:01:13 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/17 13:42:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,27 @@
 
 static t_err		g_err;
 
-static const char	*g_errstr[E__MAX] = {\
-	[E__UNSPECIFIED] = "Unspecified error", \
-	[E_MEM] = "Memory allocation failed", \
-	[E_OPEN] = "Could not open file", \
-	[E_FONT] = "Could not load font.", \
-	[E_MAP_EXT] = "Incorrect scene file extension", \
-	[E_MAP_EMPTY] = "Map is empty", \
-	[E_MAP_CHARS] = "Map contains invalid characters", \
-	[E_MAP_SPAWN] = "Map has no spawn point", \
-	[E_MAP_SPAWNS] = "Map has multiple spawn points", \
-	[E_MAP_WALLS] = "Map is not enclosed by walls", \
+static const char	*g_errstr[E__MAX] = {
+[E__UNSPECIFIED] = "Unspecified error",
+[E_MEM] = "Memory allocation failed",
+[E_OPEN] = "Could not open file",
+[E_MAP_EXT] = "Incorrect scene file extension",
+[E_MAP_EMPTY] = "Map is empty",
+[E_MAP_CHARS] = "Map contains invalid characters",
+[E_MAP_SPAWN] = "Map has no spawn point",
+[E_MAP_SPAWNS] = "Map has multiple spawn points",
+[E_MAP_WALLS] = "Map is not enclosed by walls",
+[E_BONUS] = "Bonus unimplemented",
+[E_FONT] = "Font loading failed",
+[E_MLX] = "Window initalization failed",
+[E_TEX] = "Texture loading failed",
+[E_IMG] = "Failed to create MLX42 image",
+[E_DISP] = "Failed to display image on window",
 };
 
-static const bool	g_err_perror[E__MAX] = {\
-	[E_MEM] = true, \
-	[E_OPEN] = true, \
+static const bool	g_err_perror[E__MAX] = {
+[E_MEM] = true,
+[E_OPEN] = true,
 };
 
 // Thank you 42 for not making fprintf an allowed function <3
