@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:48:59 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 14:59:23 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/19 08:13:32 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,30 @@
 
 #include "defaults.h"
 #include "raycast.h"
+
+// TODO figure out which variable to step back when textures are involved
+static inline void	mirror_ray(t_raycast *ray)
+{
+	if (ray->hit_side == SIDE_W || ray->hit_side == SIDE_E)
+	{
+		//ray->side.x -= ray->delta.x;
+		ray->pos.x -= ray->step.x;
+		ray->step.x = -ray->step.x;
+	}
+	else
+	{
+		//ray->side.y -= ray->delta.y;
+		ray->pos.y -= ray->step.y;
+		ray->step.y = -ray->step.y;
+	}
+	ray->hit_cell = get_cell(ray->map, ray->pos);
+}
+
+static inline void	dda_hooks(t_raycast *ray)
+{
+	if (ray->hit_cell->type == C_MIRROR)
+		mirror_ray(ray);
+}
 
 static inline void	dda(t_raycast *ray)
 {
@@ -35,12 +59,12 @@ static inline void	dda(t_raycast *ray)
 			ray->hit_side = 2 + (ray->step.y == 1);
 		}
 		ray->hit_cell = get_cell(ray->map, ray->pos);
+		dda_hooks(ray);
 		if (collides(ray->hit_cell))
 			ray->hit = true;
 	}
-	if (ray->hit_side == SIDE_E || ray->hit_side == SIDE_W)
-		ray->dist = ray->side.x - ray->delta.x;
-	else
+	ray->dist = ray->side.x - ray->delta.x;
+	if (ray->hit_side == SIDE_N || ray->hit_side == SIDE_S)
 		ray->dist = ray->side.y - ray->delta.y;
 }
 

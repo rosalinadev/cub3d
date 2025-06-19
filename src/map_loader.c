@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 04:02:09 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/19 07:35:11 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,13 @@
 #include "map.h"
 
 #define MAP_CHARS       " 01NSEW"
-#define MAP_CHARS_BONUS " 01DXNSEW"
+#define MAP_CHARS_BONUS " 01MDXNSEW"
 
 static const t_cell_type	g_type_map[0x100] = {
 [' '] = C_OOB,
 ['0'] = C_EMPTY,
 ['1'] = C_WALL,
+['M'] = C_MIRROR,
 ['D'] = C_DOOR,
 ['X'] = C_SPRITE,
 ['N'] = C_SPAWN,

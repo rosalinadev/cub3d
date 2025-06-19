@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 15:10:52 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/19 07:33:42 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static bool	parse_args(t_map *map, int argc, char *argv[])
 			&& ft_strcmp(s, MAP_EXT"_bonus") != 0))
 		return (eno(E_MAP_EXT), false);
 	map->is_bonus = ft_strcmp(s, MAP_EXT"_bonus") == 0;
-	if (map->is_bonus) // TODO remove when implemented
+	if (DISABLE_BONUS && map->is_bonus) // TODO remove when implemented
 		return (eno(E_BONUS), false);
 	return (true);
 }

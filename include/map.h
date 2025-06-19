@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 03:56:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 05:37:57 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/19 07:59:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MAP_H
 
 # include <stdbool.h>
-# include <stddef.h>
 
 # include "types.h"
 
@@ -34,6 +33,7 @@ typedef enum e_cell_type
 	C_OOB = 0,
 	C_EMPTY,
 	C_WALL,
+	C_MIRROR,
 	C_DOOR,
 	C_SPRITE,
 	C_SPAWN,

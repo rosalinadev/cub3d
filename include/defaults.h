@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 05:39:29 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 14:59:28 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/19 08:09:27 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@
 # define MOV_SPEED 5.0 // cells/s
 // in radians/second
 # define ROT_SPEED 3.0 // rad/s
+
+# define DISABLE_BONUS false
 
 #endif
