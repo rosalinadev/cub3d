@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 23:12:02 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/05/09 16:20:48 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/19 10:30:21 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static const t_kb_bit	g_is_pressed[MAXKEYCODE] = {
 [MLX_KEY_A] = H_LEFT,
 [MLX_KEY_S] = H_BACKWARDS,
 [MLX_KEY_D] = H_RIGHT,
+[MLX_KEY_LEFT_SHIFT] = H_SPRINT,
 [MLX_KEY_LEFT] = H_LOOKLEFT,
 [MLX_KEY_RIGHT] = H_LOOKRIGHT,
 };

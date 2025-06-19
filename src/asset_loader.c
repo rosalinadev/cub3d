@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/17 08:09:49 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/19 08:30:55 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "assets.h"
 #include "error.h"
 
-// XXX could add XPM/XPM42 loading
 static bool	load_asset(t_asset *asset)
 {
 	asset->tex = mlx_load_png(asset->path);

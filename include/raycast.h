@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:49:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 15:09:04 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/19 08:26:24 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "player.h"
 # include "types.h"
 
+// remember to update assets.h:e_asset_id
 typedef enum e_side
 {
 	SIDE_W = 0,
