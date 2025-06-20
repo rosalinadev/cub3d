@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 19:32:09 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:38:03 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,6 @@
 #include "cub3d.h"
 #include "defaults.h"
 #include "types.h"
-
-/*static inline void	draw_movecount(t_ctx *ctx)
-{
-	static unsigned int	old_movecount;
-	t_coords			c;
-	char				str[23];
-	char				b[11];
-
-	if (ctx->map->movecount != old_movecount)
-	{
-		ft_bzero(ctx->counter->pixels,
-			ctx->counter->width * ctx->counter->height * 4);
-		ft_bzero(str, 23);
-		ft_strlcat(str, "Move count: ", 23);
-		putnbr_buf(ctx->map->movecount, b);
-		ft_strlcat(str, b, 23);
-		c = str_size(&ctx->font, str);
-		if (c.x < ctx->counter->width && c.y < ctx->counter->height)
-			draw_str(ctx->counter, &ctx->font, str, (t_coords)
-			{ctx->counter->width - 1 - c.x, ctx->counter->height - 1 - c.y});
-		ft_printf("%s\n", str);
-		old_movecount = ctx->map->movecount;
-	}
-}*/
 
 static inline void	try_move(t_map *map, t_player *plr, t_vec2f np)
 {
@@ -56,7 +32,6 @@ static inline void	try_move(t_map *map, t_player *plr, t_vec2f np)
 	}
 }
 
-// FIXME handle movement along each axis independently to stop getting stuck
 static void	handle_movement(t_ctx *ctx, double delta)
 {
 	t_vec2f			newpos;
@@ -86,16 +61,14 @@ static void	handle_movement(t_ctx *ctx, double delta)
 	try_move(&ctx->map, &ctx->player, newpos);
 }
 
-// TODO remove
-void	render_screen(t_ctx *ctx);
-void	draw_debug(t_ctx *ctx, double frametime);
-
-static inline void	tick(t_ctx *ctx)
+void	hook_loop(void *param)
 {
+	t_ctx			*ctx;
 	static double	last_move = -1;
 	static double	last_frame = -1;
 	double			time;
 
+	ctx = param;
 	time = mlx_get_time();
 	if (time - last_move >= 0.001)
 	{
@@ -109,33 +82,6 @@ static inline void	tick(t_ctx *ctx)
 		render_screen(ctx);
 		draw_debug(ctx, mlx_get_time() - time);
 	}
-}
-
-// if only the subject allowed usleep to avoid killing a CPU core
-void	hook_loop(void *param)
-{
-	t_ctx			*c;
-	//static double	last_move_time;
-
-	c = param;
-	/*update_frame(c, mlx_get_time());
-	flags = interpret_input(&c->flags);
-	if (ft_bit_check(flags, P_PAUSE) && c->map->gamestate <= G_PAUSED)
-		c->map->gamestate = (c->flags &= ~(1 << P_PAUSE), !c->map->gamestate);
-	if (c->map->gamestate == G_PLAYING && (flags & 0b1111 << P_UP || (flags \
-			& 0b1111 << H_UP && mlx_get_time() - last_move_time >= MOVE_TIME)))
-	{
-		clear_mem(c->map);
-		set_map_weights(c->map, c->map->player->c, 1);
-		if (move_player(c, flags))
-			c->map->movecount++;
-		move_enemies(c);
-		iter_entities_variant(c, update_entity_variant);
-		last_move_time = mlx_get_time();
-	}
-	render_entities(c, mlx_get_time());
-	draw_movecount(c);*/
-	tick(c);
-	if (ft_bit_check(c->kb, P_QUIT))
-		mlx_close_window(c->mlx);
+	if (ft_bit_check(ctx->kb, P_QUIT))
+		mlx_close_window(ctx->mlx);
 }

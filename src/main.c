@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 22:28:56 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:39:14 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,20 +124,14 @@ static void	cleanup(t_ctx *ctx)
 }
 
 // FIXME:
-//  - refactor everything into modular code
 //  - fixup errors to use new codebase
 //  - remember to free gnl on error
 // TODO:
 //  - map loading:
 //   - parameter parsing
-//   - load assets now or later?
 //	 - sprites
-//  - load assets XXX free
-//  - debug mode!
-//  - rendering
-//  - textures
 //  - animated sprites
-//  - fixup input, add mouse
+//  - add mouse
 //  - minimap (follows player if too big)
 // XXX possible future improvements: 
 // - fullscreen key

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 19:39:25 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:40:01 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@
 #include "mlx_utils.h"
 #include "raycast.h"
 
-#if 1
-
-static void	draw_slice(t_ctx *ctx,
-		uint32_t x, t_raycast *ray, int32_t height)
+static void	draw_slice(t_ctx *ctx, uint32_t x, t_raycast *ray, int32_t height)
 {
 	int32_t			start;
 	int32_t			end;
@@ -47,33 +44,6 @@ static void	draw_slice(t_ctx *ctx,
 			= ((uint32_t *)tex->pixels)[tex->width * tex_pos.y + tex_pos.x];
 	}
 }
-#else
-
-static void	draw_slice(t_ctx *ctx,
-		uint32_t x, t_raycast *ray, int32_t height)
-{
-	int32_t			start;
-	int32_t			end;
-	mlx_texture_t	*tex;
-	t_vec2u			tex_pos;
-	float			step;
-
-	start = ft_max(2, ((int32_t)ctx->disp->height - height) / 2, 0);
-	end = ft_min(2, (ctx->disp->height + height) / 2 + 1, ctx->disp->height);
-	tex = ctx->assets[ray->hit_side].tex;
-	tex_pos.x = ray->hit_x * tex->width;
-	step = (float)tex->height / height;
-	while (start < end)
-	{
-		tex_pos.y = ceilf(start + ((float)height
-					- ctx->disp->height) / 2) * step;
-		if (tex_pos.y >= tex->height)
-			tex_pos.y = tex->height - 1;
-		((uint32_t *)ctx->disp->pixels)[ctx->disp->width * start++ + x]
-			= ((uint32_t *)tex->pixels)[tex->width * tex_pos.y + tex_pos.x];
-	}
-}
-#endif
 
 static void	render_slices(t_ctx *ctx)
 {
