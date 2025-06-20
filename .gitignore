@@ -1,2 +1,8 @@
+assets/*
+!assets/hall-fetica-bold.png
+!assets/cub3d_test.png
+!assets/edgetest.png
+!assets/gradient.png
+!assets/highres.sh
 build
 cub3D

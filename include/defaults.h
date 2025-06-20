@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 05:39:29 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/19 10:43:58 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 18:42:30 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,13 @@
 # define ERR_PRE "Error\n"
 
 # define START_FULLSCREEN false
-# define WIDTH 640
-# define HEIGHT 480
+# if 0
+#  define WIDTH 640
+#  define HEIGHT 480
+# else
+#  define WIDTH 1920
+#  define HEIGHT 1080
+# endif
 # define RENDER_DISTANCE 256
 # define FOV 90 // deg
 # define MOV_SPEED 5.0 // cells/s

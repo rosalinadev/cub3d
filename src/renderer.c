@@ -6,62 +6,100 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 14:44:25 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:39:25 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
+#include <stdint.h>
 #include "MLX42/MLX42.h"
 #include "libft.h"
 
-#include "map.h"
-#include "player.h"
+#include "cub3d.h"
+#include "mlx_utils.h"
 #include "raycast.h"
 
-static const uint32_t	g_side_to_color[4] = {
-	0xFF0000FF,
-	0x00FF00FF,
-	0x0000FFFF,
-	0xFFFF00FF
-};
+#if 1
 
-static void	draw_slice(mlx_image_t *screen,
-		uint32_t x, t_raycast *ray, int height)
+static void	draw_slice(t_ctx *ctx,
+		uint32_t x, t_raycast *ray, int32_t height)
 {
-	int	start;
-	int	end;
+	int32_t			start;
+	int32_t			end;
+	mlx_texture_t	*tex;
+	t_vec2u			tex_pos;
+	t_vec2f			step_pos;
 
-	start = ft_max(2, ((int32_t)screen->height - height) / 2, 0);
-	end = ft_min(2, (screen->height + height) / 2 + 1, screen->height);
+	start = ft_max(2, ((int32_t)ctx->disp->height - height) / 2, 0);
+	end = ft_min(2, (ctx->disp->height + height) / 2 + 1, ctx->disp->height);
+	tex = ctx->assets[ray->hit_side].tex;
+	tex_pos.x = ray->hit_x * tex->width;
+	step_pos.x = (float)tex->height / height;
+	step_pos.y = ceilf(start + ((float)height
+				- ctx->disp->height) / 2) * step_pos.x;
 	while (start < end)
-		mlx_put_pixel(screen, x, start++, g_side_to_color[ray->hit_side]);
+	{
+		tex_pos.y = step_pos.y;
+		if (tex_pos.y >= tex->height)
+			tex_pos.y = tex->height - 1;
+		step_pos.y += step_pos.x;
+		((uint32_t *)ctx->disp->pixels)[ctx->disp->width * start++ + x]
+			= ((uint32_t *)tex->pixels)[tex->width * tex_pos.y + tex_pos.x];
+	}
 }
+#else
 
-static void	render_slices(mlx_image_t *screen, t_map *map, t_player *player)
+static void	draw_slice(t_ctx *ctx,
+		uint32_t x, t_raycast *ray, int32_t height)
+{
+	int32_t			start;
+	int32_t			end;
+	mlx_texture_t	*tex;
+	t_vec2u			tex_pos;
+	float			step;
+
+	start = ft_max(2, ((int32_t)ctx->disp->height - height) / 2, 0);
+	end = ft_min(2, (ctx->disp->height + height) / 2 + 1, ctx->disp->height);
+	tex = ctx->assets[ray->hit_side].tex;
+	tex_pos.x = ray->hit_x * tex->width;
+	step = (float)tex->height / height;
+	while (start < end)
+	{
+		tex_pos.y = ceilf(start + ((float)height
+					- ctx->disp->height) / 2) * step;
+		if (tex_pos.y >= tex->height)
+			tex_pos.y = tex->height - 1;
+		((uint32_t *)ctx->disp->pixels)[ctx->disp->width * start++ + x]
+			= ((uint32_t *)tex->pixels)[tex->width * tex_pos.y + tex_pos.x];
+	}
+}
+#endif
+
+static void	render_slices(t_ctx *ctx)
 {
 	t_raycast	ray;
 	uint32_t	x;
 	int			height;
 
-	ray = (t_raycast){.map = map, .player = player};
+	ray = (t_raycast){.map = &ctx->map, .player = &ctx->player};
 	x = 0;
-	while (x < screen->width)
+	while (x < ctx->disp->width)
 	{
-		ray.dir = vec2f_add(player->dir, vec2f_scale(
-					&player->cam, 2.0 * x / screen->width - 1));
+		ray.dir = vec2f_add(ctx->player.dir, vec2f_scale(
+					&ctx->player.cam, 2.0 * x / ctx->disp->width - 1));
 		cast_ray(&ray);
 		if (ray.hit)
 		{
-			height = screen->width / ray.dist / (hypotf(player->cam.x,
-						player->cam.y) * 2);
-			draw_slice(screen, x, &ray, height);
+			height = ctx->disp->width / ray.dist / (hypotf(ctx->player.cam.x,
+						ctx->player.cam.y) * 2);
+			draw_slice(ctx, x, &ray, height);
 		}
 		x++;
 	}
 }
 
-void	render_screen(mlx_image_t *screen, t_map *map, t_player *player)
+void	render_screen(t_ctx *ctx)
 {
-	ft_bzero(screen->pixels, screen->width * screen->height * 4);
-	render_slices(screen, map, player);
+	mlx_clear_image(ctx->disp);
+	render_slices(ctx);
 }

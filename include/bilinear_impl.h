@@ -1,39 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   assets.h                                           :+:      :+:    :+:   */
+/*   bilinear_impl.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 18:39:48 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 13:05:10 by rvandepu         ###   ########.fr       */
+/*   Created: 2025/06/20 14:33:32 by rvandepu          #+#    #+#             */
+/*   Updated: 2025/06/20 20:02:12 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASSETS_H
-# define ASSETS_H
+#ifndef BILINEAR_IMPL_H
+# define BILINEAR_IMPL_H
 
-# include "MLX42/MLX42.h"
+#include <stdint.h>
 
-// keep in sync with raycast.h:e_side
-typedef enum e_asset_id
+# include "types.h"
+
+typedef struct s_bi
 {
-	A__FIRST = 0,
-	A_W = A__FIRST,
-	A_E,
-	A_N,
-	A_S,
-	A__SIZE
-}	t_asset_id;
-
-typedef struct s_asset
-{
-	char			*path;
-	mlx_texture_t	*tex;
-}	t_asset;
-
-// asset_loader.c
-void	free_assets(t_asset assets[A__SIZE]);
-bool	load_assets(t_asset assets[A__SIZE]);
+	uint32_t	i;
+	uint32_t	j;
+	uint8_t		s;
+	t_vec2f		r;
+	t_vec2f		l;
+	t_vec2f		h;
+	t_vec2f		w;
+	float		a;
+	float		b;
+	float		c;
+	float		d;
+}	t_bi;
 
 #endif

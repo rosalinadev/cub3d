@@ -1,39 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   assets.h                                           :+:      :+:    :+:   */
+/*   mlx_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 18:39:48 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 13:05:10 by rvandepu         ###   ########.fr       */
+/*   Created: 2025/06/20 13:53:52 by rvandepu          #+#    #+#             */
+/*   Updated: 2025/06/20 14:59:48 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASSETS_H
-# define ASSETS_H
+#ifndef MLX_UTILS_H
+# define MLX_UTILS_H
 
 # include "MLX42/MLX42.h"
 
-// keep in sync with raycast.h:e_side
-typedef enum e_asset_id
-{
-	A__FIRST = 0,
-	A_W = A__FIRST,
-	A_E,
-	A_N,
-	A_S,
-	A__SIZE
-}	t_asset_id;
-
-typedef struct s_asset
-{
-	char			*path;
-	mlx_texture_t	*tex;
-}	t_asset;
-
-// asset_loader.c
-void	free_assets(t_asset assets[A__SIZE]);
-bool	load_assets(t_asset assets[A__SIZE]);
+void			mlx_clear_image(mlx_image_t *img);
+mlx_texture_t	*mlx_new_texture(uint32_t width, uint32_t height);
+void			mlx_scale_texture(mlx_texture_t *in, mlx_texture_t *out);
 
 #endif

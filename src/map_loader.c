@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/19 07:35:11 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:02:23 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,14 @@ static bool	read_map(t_map *map, int fd, int depth)
 static bool	is_enclosed(t_map *map, t_vec2 pos, bool *mem)
 {
 	static bool	enclosed = true;
-	t_cell_type	type;
+	t_cell		*cell;
 
 	if (!enclosed)
 		return (false);
-	type = get_cell(map, pos)->type;
-	if (type == C_OOB)
+	cell = get_cell(map, pos);
+	if (cell->type == C_OOB)
 		return (enclosed = false);
-	if (type == C_WALL || mem[pos.y * map->size.x + pos.x])
+	if (collides(cell) || mem[pos.y * map->size.x + pos.x])
 		return (true);
 	mem[pos.y * map->size.x + pos.x] = true;
 	is_enclosed(map, (t_vec2){pos.x + 1, pos.y}, mem);

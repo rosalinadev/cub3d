@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:49:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/19 08:26:24 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 21:36:14 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ typedef struct s_raycast
 	bool		hit;
 	t_cell		*hit_cell;
 	t_side		hit_side;
+	float		hit_x;
+	bool		flip_we;
+	bool		flip_ns;
 }	t_raycast;
 
 // raycaster.c

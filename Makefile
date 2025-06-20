@@ -6,7 +6,7 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2025/06/18 14:05:02 by rvandepu         ###   ########.fr        #
+#    Updated: 2025/06/20 15:08:17 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC  := main.c \
 		renderer.c \
 		raycaster.c \
 		\
+		mlx_utils.c \
 		font.c \
 		type_utils.c \
 		vec_utils.c \

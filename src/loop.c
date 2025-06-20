@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/19 10:41:21 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:32:09 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,9 @@ static void	handle_movement(t_ctx *ctx, double delta)
 	try_move(&ctx->map, &ctx->player, newpos);
 }
 
-bool	render_screen(mlx_image_t *img, t_map *map, t_player *player);
-void	draw_debug(t_ctx *ctx);
+// TODO remove
+void	render_screen(t_ctx *ctx);
+void	draw_debug(t_ctx *ctx, double frametime);
 
 static inline void	tick(t_ctx *ctx)
 {
@@ -103,9 +104,10 @@ static inline void	tick(t_ctx *ctx)
 	}
 	if (time - last_frame >= 0.01)
 	{
+		time = mlx_get_time();
 		last_frame = time;
-		render_screen(ctx->disp, &ctx->map, &ctx->player);
-		draw_debug(ctx);
+		render_screen(ctx);
+		draw_debug(ctx, mlx_get_time() - time);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 07:27:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/18 12:57:37 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 12:55:50 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_vec3f
 }	t_vec3f;
 
 // type_utils.c
+t_col	color_mult(t_col lhs, t_col rhs);
 t_vec2	vec2f_floor(t_vec2f vec);
 t_vec2	vec2_u2s(t_vec2u vec);
 t_vec2u	vec2_s2u(t_vec2 vec);

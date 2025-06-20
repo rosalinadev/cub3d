@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:48:59 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/19 08:13:32 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:05:14 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,19 @@
 #include "defaults.h"
 #include "raycast.h"
 
-// TODO figure out which variable to step back when textures are involved
 static inline void	mirror_ray(t_raycast *ray)
 {
 	if (ray->hit_side == SIDE_W || ray->hit_side == SIDE_E)
 	{
-		//ray->side.x -= ray->delta.x;
 		ray->pos.x -= ray->step.x;
 		ray->step.x = -ray->step.x;
+		ray->flip_ns = !ray->flip_ns;
 	}
 	else
 	{
-		//ray->side.y -= ray->delta.y;
 		ray->pos.y -= ray->step.y;
 		ray->step.y = -ray->step.y;
+		ray->flip_we = !ray->flip_we;
 	}
 	ray->hit_cell = get_cell(ray->map, ray->pos);
 }
@@ -68,6 +67,7 @@ static inline void	dda(t_raycast *ray)
 		ray->dist = ray->side.y - ray->delta.y;
 }
 
+// FIXME find root cause of hit_x going negative (WHY?!)
 void	cast_ray(t_raycast *ray)
 {
 	ray->pos = vec2f_floor(ray->player->pos);
@@ -77,5 +77,19 @@ void	cast_ray(t_raycast *ray)
 				- ray->player->pos.x)) * ray->delta.x, fabsf((ray->dir.y >= 0)
 			- fabsf(ray->pos.y - ray->player->pos.y)) * ray->delta.y};
 	ray->hit = false;
+	ray->flip_we = false;
+	ray->flip_ns = false;
 	dda(ray);
+	ray->hit_x = ray->player->pos.y + ray->dist * ray->dir.y;
+	if (ray->hit_side == SIDE_N || ray->hit_side == SIDE_S)
+		ray->hit_x = ray->player->pos.x + ray->dist * ray->dir.x;
+	ray->hit_x = modff(ray->hit_x, &ray->hit_x);
+	if (ray->hit_x < 0)
+		ray->hit_x = 1 + ray->hit_x;
+	if ((ray->hit_side == SIDE_W || ray->hit_side == SIDE_S))
+		ray->hit_x = 1 - ray->hit_x;
+	if ((ray->hit_side == SIDE_W || ray->hit_side == SIDE_E) && ray->flip_we)
+		ray->hit_x = 1 - ray->hit_x;
+	if ((ray->hit_side == SIDE_N || ray->hit_side == SIDE_S) && ray->flip_ns)
+		ray->hit_x = 1 - ray->hit_x;
 }
