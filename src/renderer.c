@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 22:40:01 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 02:03:27 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static void	draw_slice(t_ctx *ctx, uint32_t x, t_raycast *ray, int32_t height)
 	end = ft_min(2, (ctx->disp->height + height) / 2 + 1, ctx->disp->height);
 	tex = ctx->assets[ray->hit_side].tex;
 	tex_pos.x = ray->hit_x * tex->width;
+	if (tex_pos.x >= tex->width)
+		tex_pos.x = tex->width - 1;
 	step_pos.x = (float)tex->height / height;
 	step_pos.y = ceilf(start + ((float)height
 				- ctx->disp->height) / 2) * step_pos.x;
