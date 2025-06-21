@@ -6,7 +6,7 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2025/06/20 15:08:17 by rvandepu         ###   ########.fr        #
+#    Updated: 2025/06/21 17:13:17 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ OBJ_DIR := build
 OBJ     := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 CPPFLAGS += -Iinclude
-CFLAGS   += -Wall -Wextra -Werror
+CFLAGS   += -Wall -Wextra -Werror -O3
 
 # https://github.com/rosalinadev/libft
 LIBFT_DIR	:= libft
@@ -70,7 +70,9 @@ fclean: clean
 
 re: fclean all
 
-test: CFLAGS += -g -Wno-error
+FSANITIZE := -fsanitize=address
+test: CFLAGS += -Og -g -Wno-error $(FSANITIZE)
+test: LDFLAGS += $(FSANITIZE)
 test: re
 
 $(OBJ_DIR):

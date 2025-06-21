@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 03:56:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/19 07:59:17 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 15:28:31 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdbool.h>
 
+# include "assets.h"
 # include "types.h"
 
 typedef struct s_map	t_map;
@@ -52,6 +53,7 @@ typedef struct s_cell
 
 typedef struct s_map
 {
+	t_meta	*meta;
 	t_vec2u	size;
 	t_cell	*cells;
 	t_vec2u	spawn_pos;

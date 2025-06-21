@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 02:03:27 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 16:17:26 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	draw_slice(t_ctx *ctx, uint32_t x, t_raycast *ray, int32_t height)
 
 	start = ft_max(2, ((int32_t)ctx->disp->height - height) / 2, 0);
 	end = ft_min(2, (ctx->disp->height + height) / 2 + 1, ctx->disp->height);
-	tex = ctx->assets[ray->hit_side].tex;
+	tex = ctx->assets.tex[ray->hit_side];
 	tex_pos.x = ray->hit_x * tex->width;
 	if (tex_pos.x >= tex->width)
 		tex_pos.x = tex->width - 1;
@@ -43,7 +43,7 @@ static void	draw_slice(t_ctx *ctx, uint32_t x, t_raycast *ray, int32_t height)
 			tex_pos.y = tex->height - 1;
 		step_pos.y += step_pos.x;
 		((uint32_t *)ctx->disp->pixels)[ctx->disp->width * start++ + x]
-			= ((uint32_t *)tex->pixels)[tex->width * tex_pos.y + tex_pos.x];
+			= ((uint32_t *)tex->pixels)[tex->height * tex_pos.x + tex_pos.y];
 	}
 }
 

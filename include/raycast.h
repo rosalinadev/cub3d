@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:49:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 21:36:14 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 02:56:33 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,8 @@
 
 # include "map.h"
 # include "player.h"
+# include "side.h"
 # include "types.h"
-
-// remember to update assets.h:e_asset_id
-typedef enum e_side
-{
-	SIDE_W = 0,
-	SIDE_E,
-	SIDE_N,
-	SIDE_S
-}	t_side;
 
 typedef struct s_raycast
 {

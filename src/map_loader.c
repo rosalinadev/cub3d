@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 22:02:23 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 05:53:40 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static const t_cell_type	g_type_map[0x100] = {
 };
 
 // these shouldn't be scaled
-static const t_vec2f		g_facing_map[0x100] = {\
+static const t_vec2f		g_facing_map[0x100] = {
 ['N'] = {0, -1},
 ['S'] = {0, 1},
 ['E'] = {1, 0},

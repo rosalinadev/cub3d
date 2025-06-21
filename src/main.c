@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 22:39:14 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 17:37:33 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static bool	init_win(t_ctx *ctx)
 static void	cleanup(t_ctx *ctx)
 {
 	free(ctx->map.cells);
-	free_assets(ctx->assets);
+	free_assets(&ctx->assets);
 	if (ctx->mlx)
 		mlx_terminate(ctx->mlx);
 	if (ctx->font.tex)
@@ -151,11 +151,11 @@ int	main(int argc, char *argv[])
 	player_respawn(&ctx.player, &ctx.map);
 	printf("player pos x:%f y:%f\n", ctx.player.pos.x, ctx.player.pos.y);
 	printf("player dir x:%f y:%f\n", ctx.player.dir.x, ctx.player.dir.y);
-	ctx.assets[A_W].path = ft_strdup("assets/gradient.png");
-	ctx.assets[A_E].path = ft_strdup("assets/cub3d_test.png");
-	ctx.assets[A_N].path = ft_strdup("assets/edgetest.png");
-	ctx.assets[A_S].path = ft_strdup("assets/highres.png");
-	if (!load_assets(ctx.assets))
+	ctx.assets.meta.path[A_W] = ft_strdup("assets/gradient.png");
+	ctx.assets.meta.path[A_E] = ft_strdup("assets/cub3d_test.png");
+	ctx.assets.meta.path[A_N] = ft_strdup("assets/checkerboard.png");
+	ctx.assets.meta.path[A_S] = ft_strdup("assets/highres.png");
+	if (!load_assets(&ctx.assets))
 		return (err_p(1, "While loading assets"), cleanup(&ctx), EXIT_FAILURE);
 	// load sprites
 	printf("width:%u height:%u\n", ctx.map.size.x, ctx.map.size.y);

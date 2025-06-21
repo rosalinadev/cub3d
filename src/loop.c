@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 22:38:03 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 17:04:00 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	hook_loop(void *param)
 		handle_movement(ctx, time - last_move);
 		last_move = time;
 	}
-	if (time - last_frame >= 0.01)
+	if (time - last_frame >= 1.0 / FPS)
 	{
 		time = mlx_get_time();
 		last_frame = time;

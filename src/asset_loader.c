@@ -6,51 +6,77 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 22:33:44 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 16:43:43 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdint.h>
 #include <stdlib.h>
 #include "MLX42/MLX42.h"
 
 #include "assets.h"
 #include "error.h"
 
-// caller handles freeing after errors
-static bool	load_asset(t_asset *asset)
+static bool	load_asset(char *path, mlx_texture_t **ret)
 {
-	asset->tex = mlx_load_png(asset->path);
-	if (!asset->tex)
-		return (eno(E_TEX), err_p(2, "While loading PNG asset", asset->path),
+	mlx_texture_t	*tex;
+	uint32_t		*pixels;
+	size_t			i;
+
+	if (!path)
+		return (true);
+	tex = mlx_load_png(path);
+	if (!tex)
+		return (eno(E_TEX), err_p(2, "While loading PNG asset", path),
 			eno(E__NOPRINT), false);
-	free(asset->path);
-	asset->path = NULL;
+	pixels = malloc(tex->width * tex->height * 4);
+	if (!pixels)
+		return (eno(E_MEM), err_p(2, "While loading PNG asset", path),
+			eno(E__NOPRINT), mlx_delete_texture(tex), false);
+	i = tex->width * tex->height;
+	while (i--)
+		pixels[i % tex->width * tex->height + i / tex->width] = ((uint32_t *)
+				tex->pixels)[i / tex->width * tex->width + i % tex->width];
+	free(tex->pixels);
+	tex->pixels = (uint8_t *)pixels;
+	*ret = tex;
 	return (true);
 }
 
-void	free_assets(t_asset assets[A__SIZE])
+void	free_assets(t_assets *assets)
 {
-	t_asset_id	id;
+	t_side	id;
+	size_t	i;
 
-	id = A__FIRST;
-	while (id < A__SIZE)
+	id = A__SIZE;
+	while (id-- != A__FIRST)
 	{
-		free(assets[id].path);
-		assets[id].path = NULL;
-		if (assets[id].tex)
-			mlx_delete_texture(assets[id].tex);
-		assets[id].tex = NULL;
-		id++;
+		free(assets->meta.path[id]);
+		assets->meta.path[id] = NULL;
+		if (assets->tex[id])
+			mlx_delete_texture(assets->tex[id]);
+		assets->tex[id] = NULL;
 	}
+	free(assets->meta.sprite_dir);
+	assets->meta.sprite_dir = NULL;
+	if (!assets->sprite)
+		return ;
+	i = assets->meta.sprite_frames;
+	while (assets->sprite && i--)
+		if ((assets->sprite + i)->tex)
+			mlx_delete_texture((assets->sprite + i)->tex);
+	free(assets->sprite);
+	assets->sprite = NULL;
 }
 
-bool	load_assets(t_asset assets[A__SIZE])
+bool	load_assets(t_assets *assets)
 {
-	t_asset_id	id;
+	t_side	id;
 
-	id = A__FIRST;
-	while (id < A__SIZE)
-		if (!load_asset(&assets[id++]))
+	id = A__SIZE;
+	while (id-- != A__FIRST)
+		if (!load_asset(assets->meta.path[id], &assets->tex[id]))
 			return (free_assets(assets), false);
+	// TODO load sprite frames
 	return (true);
 }

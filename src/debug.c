@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 06:08:23 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 19:35:36 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 17:07:47 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,19 @@
 #include "libft.h"
 
 #include "cub3d.h"
+#include "defaults.h"
 #include "mlx_utils.h"
 
 #define I 11
 #define F 23
+
+static void	itoa_cat(int i, char *str, size_t l)
+{
+	char	b[I + 1];
+
+	ft_itoa_buf(i, b);
+	ft_strlcat(str, b, l);
+}
 
 static void	ftoa_cat(float f, char *str, size_t l)
 {
@@ -36,7 +45,8 @@ static void	ftoa_cat(float f, char *str, size_t l)
 	i = (ft_itoa_buf(f *= 10, tmp), f = modff(f, &i), ft_strlcat(str, tmp, l));
 }
 
-#define L10 "fps: "
+#define L10 "fps (cap "
+#define L11 "): "
 #define L20 "\npos x: "
 #define L21 " y: "
 #define L30 "\ndir x: "
@@ -45,11 +55,14 @@ static void	ftoa_cat(float f, char *str, size_t l)
 void	draw_debug(t_ctx *ctx, double frametime)
 {
 	t_vec2u	c;
-	char	str[sizeof(L10) + F + sizeof(L20) + F + sizeof(L21) + F + 1];
+	char	str[sizeof(L10) + F + sizeof(L11) + I
+		+ sizeof(L20) + F + sizeof(L21) + F + 1];
 
 	mlx_clear_image(ctx->debug);
 	ft_bzero(str, sizeof(str));
 	ft_strlcat(str, L10, sizeof(str));
+	itoa_cat(FPS, str, sizeof(str));
+	ft_strlcat(str, L11, sizeof(str));
 	ftoa_cat(1 / frametime, str, sizeof(str));
 	ft_strlcat(str, L20, sizeof(str));
 	ftoa_cat(ctx->player.pos.x, str, sizeof(str));
