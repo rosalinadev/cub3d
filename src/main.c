@@ -6,17 +6,19 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 17:37:33 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/22 12:40:27 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "MLX42/MLX42.h"
+#include "ft_bitwise.h"
 #include "libft.h"
 
 #include "cub3d.h"
 #include "defaults.h"
 #include "error.h"
+#include "mlx_utils.h"
 
 // TODO usage text
 static bool	parse_args(t_map *map, int argc, char *argv[])
@@ -61,49 +63,24 @@ static bool	init_img(t_ctx *ctx)
 		|| mlx_image_to_window(ctx->mlx, ctx->disp, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->debug, 0, 0) < 0)
 		return (eno(E_DISP), false);
-	if (!init_font(&ctx->font))
-		return (false);
 	return (true);
 }
-
-/* TODO remove or properly implement and move to other file
-static bool	get_win_size(t_vec2 *size, bool fullscreen)
-{
-	mlx_t	*mlx;
-
-	size->x = WIDTH;
-	size->y = HEIGHT;
-	if (fullscreen)
-	{
-		mlx_set_setting(MLX_FULLSCREEN, false);
-		mlx_set_setting(MLX_HEADLESS, true);
-		mlx = mlx_init(size->x, size->y, NAME, false);
-		if (!mlx)
-			return (eno(E_MLX), false);
-		mlx_get_monitor_size(0, &size->x, &size->y);
-		mlx_terminate(mlx);
-		mlx_set_setting(MLX_HEADLESS, false);
-	}
-	return (true);
-}*/
 
 static bool	init_win(t_ctx *ctx)
 {
 	static bool	fullscreen = START_FULLSCREEN;
 
-	//if (ft_bit_check(ctx->flags, F_FULLSCREEN))
-	//	fullscreen = !fullscreen;
-	//if (!get_win_size(ctx, fullscreen))
-	//if (!get_win_size(&ctx->size, fullscreen))
-	//	return (false);
-	ctx->size = (t_vec2){WIDTH, HEIGHT};
+	if (ft_bit_check(ctx->kb, P_FULLSCREEN))
+		fullscreen = !fullscreen;
+	if (!get_win_size(&ctx->size, fullscreen))
+		return (false);
 	mlx_set_setting(MLX_FULLSCREEN, fullscreen);
 	ctx->mlx = mlx_init(ctx->size.x, ctx->size.y, NAME, !fullscreen);
 	if (!ctx->mlx)
 		return (eno(E_MLX), false);
 	if (!init_img(ctx))
 		return (false);
-	//ctx->flags = ft_bit_clear(ctx->flags, F_FULLSCREEN);
+	ctx->kb = ft_bit_clear(ctx->kb, P_FULLSCREEN);
 	//mlx_resize_hook(ctx->mlx, &ft_hook_resize, ctx);
 	mlx_key_hook(ctx->mlx, &hook_key, &ctx->kb);
 	//mlx_scroll_hook(ctx->mlx, &ft_hook_scroll, ctx);
@@ -116,11 +93,10 @@ static bool	init_win(t_ctx *ctx)
 static void	cleanup(t_ctx *ctx)
 {
 	free(ctx->map.cells);
+	ctx->map.cells = NULL;
 	free_assets(&ctx->assets);
 	if (ctx->mlx)
 		mlx_terminate(ctx->mlx);
-	if (ctx->font.tex)
-		mlx_delete_texture(ctx->font.tex);
 }
 
 // FIXME:
@@ -131,11 +107,12 @@ static void	cleanup(t_ctx *ctx)
 //   - parameter parsing
 //	 - sprites
 //  - animated sprites
-//  - add mouse
+//  - mouse support:
+//   - hide cursor
+//   - snap cursor to window center
+//   - hook movement into rotation
+//   - pause menu to quit window?
 //  - minimap (follows player if too big)
-// XXX possible future improvements: 
-// - fullscreen key
-// - dynamic resize support
 // XXX future issues
 // - correctly scaling dir and plane vects
 // - correctly scaling sprite distance
@@ -162,10 +139,16 @@ int	main(int argc, char *argv[])
 	printf("spawn pos x:%u y:%u\n", ctx.map.spawn_pos.x, ctx.map.spawn_pos.y);
 	printf("spawn dir x:%f y:%f\n", ctx.map.spawn_facing.x,
 		ctx.map.spawn_facing.y);
-	if (!init_win(&ctx))
-		return (err_p(1, "While creating window"), cleanup(&ctx), EXIT_FAILURE);
-	printf("screen width:%u height:%u\n", ctx.size.x, ctx.size.y);
-	mlx_loop(ctx.mlx);
+	while (!ft_bit_check(ctx.kb, P_QUIT))
+	{
+		if (!init_win(&ctx))
+			return (err_p(1, "While creating window"),
+				cleanup(&ctx), EXIT_FAILURE);
+		printf("screen width:%u height:%u\n", ctx.size.x, ctx.size.y);
+		mlx_loop(ctx.mlx);
+		mlx_terminate(ctx.mlx);
+		ctx.mlx = NULL;
+	}
 	cleanup(&ctx);
 	return (EXIT_SUCCESS);
 }

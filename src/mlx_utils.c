@@ -6,10 +6,12 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:54:18 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 22:35:33 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/22 12:04:34 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "defaults.h"
+#include "error.h"
 #include "mlx_utils.h"
 
 void	mlx_clear_image(mlx_image_t *img)
@@ -21,4 +23,24 @@ void	mlx_clear_image(mlx_image_t *img)
 	i = img->width * img->height;
 	while (i)
 		pixels[--i] = 0;
+}
+
+bool	get_win_size(t_vec2 *size, bool fullscreen)
+{
+	mlx_t	*mlx;
+
+	size->x = WIDTH;
+	size->y = HEIGHT;
+	if (fullscreen)
+	{
+		mlx_set_setting(MLX_FULLSCREEN, false);
+		mlx_set_setting(MLX_HEADLESS, true);
+		mlx = mlx_init(size->x, size->y, NAME, false);
+		if (!mlx)
+			return (eno(E_MLX), false);
+		mlx_get_monitor_size(0, &size->x, &size->y);
+		mlx_terminate(mlx);
+		mlx_set_setting(MLX_HEADLESS, false);
+	}
+	return (true);
 }

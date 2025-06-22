@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 19:09:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/19 10:26:14 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/22 12:06:57 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef enum e_kb_bit
 	H_LOOKRIGHT,
 	P_QUIT,
 	P_MINIMAP,
+	P_FULLSCREEN,
 }	t_kb_bit;
 
 void	hook_key(mlx_key_data_t keydata, void *param);

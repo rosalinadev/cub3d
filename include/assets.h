@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:39:48 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 15:14:10 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/22 12:13:37 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdint.h>
 # include "MLX42/MLX42.h"
 
+# include "font.h"
 # include "side.h"
 
 typedef struct s_meta
@@ -35,6 +36,7 @@ typedef struct s_frame
 
 typedef struct s_assets
 {
+	t_font			font;
 	t_meta			meta;
 	mlx_texture_t	*tex[A__SIZE];
 	t_frame			*sprite;

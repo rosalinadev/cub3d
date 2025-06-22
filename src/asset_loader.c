@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 16:43:43 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/22 12:14:49 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ void	free_assets(t_assets *assets)
 	t_side	id;
 	size_t	i;
 
+	if (assets->font.tex)
+		mlx_delete_texture(assets->font.tex);
+	assets->font.tex = NULL;
 	id = A__SIZE;
 	while (id-- != A__FIRST)
 	{
@@ -73,6 +76,8 @@ bool	load_assets(t_assets *assets)
 {
 	t_side	id;
 
+	if (!init_font(&assets->font))
+		return (false);
 	id = A__SIZE;
 	while (id-- != A__FIRST)
 		if (!load_asset(assets->meta.path[id], &assets->tex[id]))

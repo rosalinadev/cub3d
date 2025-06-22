@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 06:08:23 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 17:07:47 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/22 12:20:36 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	draw_debug(t_ctx *ctx, double frametime)
 	ftoa_cat(ctx->player.dir.x, str, sizeof(str));
 	ft_strlcat(str, L21, sizeof(str));
 	ftoa_cat(ctx->player.dir.y, str, sizeof(str));
-	c = str_size(&ctx->font, str);
+	c = str_size(&ctx->assets.font, str);
 	if (c.x)
-		draw_str(ctx->debug, &ctx->font, str, (t_vec2u){0, 0});
+		draw_str(ctx->debug, &ctx->assets.font, str, (t_vec2u){0, 0});
 }

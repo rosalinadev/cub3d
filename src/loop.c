@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 17:04:00 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/22 12:33:33 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,9 @@ void	hook_loop(void *param)
 		render_screen(ctx);
 		draw_debug(ctx, mlx_get_time() - time);
 	}
-	if (ft_bit_check(ctx->kb, P_QUIT))
-		mlx_close_window(ctx->mlx);
+	if (!ft_bit_check(ctx->kb, P_QUIT) && !ft_bit_check(ctx->kb, P_FULLSCREEN))
+		return ;
+	mlx_close_window(ctx->mlx);
+	last_move = -1;
+	last_frame = -1;
 }

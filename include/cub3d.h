@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 15:05:09 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/22 12:13:13 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ typedef struct s_ctx
 	t_map		map;
 	t_player	player;
 	t_assets	assets;
-	t_font		font;
 	mlx_t		*mlx;
 	t_vec2		size;
 	mlx_image_t	*disp;
