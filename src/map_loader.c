@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 05:53:40 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:51:21 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ static bool	parse_line(t_map *map, const char *line, t_vec2u pos, bool final)
 			map->spawn_facing = g_facing_map[(uint8_t)line[pos.x]];
 			has_spawnpoint = true;
 		}
+		else if (cell->type == C_SPRITE)
+			cell->sprite.frame = &map->assets->sprite;
 		pos.x++;
 	}
 	if (final && !has_spawnpoint)
@@ -125,7 +127,7 @@ static bool	is_enclosed(t_map *map, t_vec2 pos, bool *mem)
 	return (enclosed);
 }
 
-bool	load_map(t_map *map, const char *path)
+bool	load_map(const char *path, t_map *map, t_assets *assets)
 {
 	int		fd;
 	bool	*mem;
@@ -133,6 +135,7 @@ bool	load_map(t_map *map, const char *path)
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 		return (eno(E_OPEN), false);
+	map->assets = assets;
 	// TODO parse map metadata
 	if (!read_map(map, fd, 0))
 		return (close(fd), free_gnl(), false);

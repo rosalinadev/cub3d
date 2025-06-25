@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:48:59 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 22:05:14 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/25 20:26:18 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 static inline void	mirror_ray(t_raycast *ray)
 {
+	ray->reflected = true;
 	if (ray->hit_side == SIDE_W || ray->hit_side == SIDE_E)
 	{
 		ray->pos.x -= ray->step.x;
@@ -36,6 +37,13 @@ static inline void	dda_hooks(t_raycast *ray)
 {
 	if (ray->hit_cell->type == C_MIRROR)
 		mirror_ray(ray);
+	/*if (!ray->reflected && ray->hit_cell->type == C_SPRITE)
+	{
+		ray->hit_cell->sprite.dist = ray->side.x - ray->delta.x;
+		if (ray->hit_side == SIDE_N || ray->hit_side == SIDE_S)
+			ray->hit_cell->sprite.dist = ray->side.y - ray->delta.y;
+		queue_sprite(&ray->sprites, &ray->hit_cell->sprite);
+	}*/
 }
 
 static inline void	dda(t_raycast *ray)
@@ -77,6 +85,7 @@ void	cast_ray(t_raycast *ray)
 				- ray->player->pos.x)) * ray->delta.x, fabsf((ray->dir.y >= 0)
 			- fabsf(ray->pos.y - ray->player->pos.y)) * ray->delta.y};
 	ray->hit = false;
+	ray->reflected = false;
 	ray->flip_we = false;
 	ray->flip_ns = false;
 	dda(ray);

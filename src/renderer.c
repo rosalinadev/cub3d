@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 16:17:26 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:50:05 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,31 +47,29 @@ static void	draw_slice(t_ctx *ctx, uint32_t x, t_raycast *ray, int32_t height)
 	}
 }
 
-static void	render_slices(t_ctx *ctx)
-{
-	t_raycast	ray;
-	uint32_t	x;
-	int			height;
-
-	ray = (t_raycast){.map = &ctx->map, .player = &ctx->player};
-	x = 0;
-	while (x < ctx->disp->width)
-	{
-		ray.dir = vec2f_add(ctx->player.dir, vec2f_scale(
-					&ctx->player.cam, 2.0 * x / ctx->disp->width - 1));
-		cast_ray(&ray);
-		if (ray.hit)
-		{
-			height = ctx->disp->width / ray.dist / (hypotf(ctx->player.cam.x,
-						ctx->player.cam.y) * 2);
-			draw_slice(ctx, x, &ray, height);
-		}
-		x++;
-	}
-}
+//static void	render_sprites(t_ctx *ctx);
 
 void	render_screen(t_ctx *ctx)
 {
+	uint32_t	x;
+	int			height;
+
 	mlx_clear_image(ctx->disp);
-	render_slices(ctx);
+	// TODO clear sprite render queue
+	ctx->ray = (t_raycast){.map = &ctx->map, .player = &ctx->player};
+	x = 0;
+	while (x < ctx->disp->width)
+	{
+		ctx->ray.dir = vec2f_add(ctx->player.dir, vec2f_scale(
+					&ctx->player.cam, 2.0 * x / ctx->disp->width - 1));
+		cast_ray(&ctx->ray);
+		if (ctx->ray.hit)
+		{
+			height = ctx->disp->width / ctx->ray.dist
+				/ (hypotf(ctx->player.cam.x, ctx->player.cam.y) * 2);
+			draw_slice(ctx, x, &ctx->ray, height);
+		}
+		x++;
+	}
+	// TODO render sprite queue
 }

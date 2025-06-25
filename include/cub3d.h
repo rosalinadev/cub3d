@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/22 12:13:13 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:43:59 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include "MLX42/MLX42.h"
 
 # include "assets.h"
-# include "font.h"
 # include "input.h"
 # include "map.h"
 # include "player.h"
+# include "raycast.h"
 # include "types.h"
 
 typedef struct s_ctx
@@ -31,6 +31,7 @@ typedef struct s_ctx
 	mlx_t		*mlx;
 	t_vec2		size;
 	mlx_image_t	*disp;
+	t_raycast	ray;
 	mlx_image_t	*debug;
 	t_kb		kb;
 }	t_ctx;

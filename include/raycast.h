@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:49:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 02:56:33 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/21 22:50:39 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct s_raycast
 {
 	t_map		*map;
 	t_player	*player;
+	t_sprite	*sprites;
 	t_vec2f		dir;
 	t_vec2		pos;
 	t_vec2		step;
@@ -32,6 +33,7 @@ typedef struct s_raycast
 	t_cell		*hit_cell;
 	t_side		hit_side;
 	float		hit_x;
+	bool		reflected;
 	bool		flip_we;
 	bool		flip_ns;
 }	t_raycast;

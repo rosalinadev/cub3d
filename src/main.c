@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/22 12:40:27 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:44:39 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int	main(int argc, char *argv[])
 
 	if (!parse_args(&ctx.map, argc, argv))
 		return (err_p(1, "While parsing arguments"), EXIT_FAILURE);
-	if (!load_map(&ctx.map, argv[1]))
+	if (!load_map(argv[1], &ctx.map, &ctx.assets))
 		return (err_p(1, "While loading map"), EXIT_FAILURE);
 	player_respawn(&ctx.player, &ctx.map);
 	printf("player pos x:%f y:%f\n", ctx.player.pos.x, ctx.player.pos.y);

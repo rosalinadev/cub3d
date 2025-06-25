@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 03:56:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 15:28:31 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:50:24 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,13 @@ typedef struct s_sprite	t_sprite;
 typedef struct s_sprite
 {
 	t_sprite	*next;
+	t_frame		**frame;
 	float		dist;
 }	t_sprite;
 
 // sprites.c
 t_vec2u	sprite_pos(t_map *map, t_sprite *sprite);
+void	queue_sprite(t_sprite **lst, t_sprite *sprite);
 
 typedef enum e_cell_type
 {
@@ -53,17 +55,17 @@ typedef struct s_cell
 
 typedef struct s_map
 {
-	t_meta	*meta;
-	t_vec2u	size;
-	t_cell	*cells;
-	t_vec2u	spawn_pos;
-	t_vec2f	spawn_facing;
-	bool	is_bonus;
+	t_assets	*assets;
+	t_vec2u		size;
+	t_cell		*cells;
+	t_vec2u		spawn_pos;
+	t_vec2f		spawn_facing;
+	bool		is_bonus;
 }	t_map;
 
 // map_loader.c
 void	free_map(t_map *map);
-bool	load_map(t_map *map, const char *path);
+bool	load_map(const char *path, t_map *map, t_assets *assets);
 
 // map_utils.c
 t_cell	*get_cell(t_map *map, t_vec2 pos);
