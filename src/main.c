@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 22:41:20 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/27 22:52:44 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ int	main(int argc, char *argv[])
 	printf("spawn pos x:%u y:%u\n", ctx.map.spawn_pos.x, ctx.map.spawn_pos.y);
 	printf("spawn dir x:%f y:%f\n", ctx.map.spawn_facing.x,
 		ctx.map.spawn_facing.y);
-	while (!ft_bit_check(ctx.kb, P_QUIT))
+	while (true)
 	{
 		if (!init_win(&ctx))
 			return (err_p(1, "While creating window"),
@@ -160,6 +160,8 @@ int	main(int argc, char *argv[])
 		mlx_loop(ctx.mlx);
 		mlx_terminate(ctx.mlx);
 		ctx.mlx = NULL;
+		if (!ft_bit_check(ctx.kb, P_FULLSCREEN))
+			break ;
 	}
 	cleanup(&ctx);
 	return (EXIT_SUCCESS);
