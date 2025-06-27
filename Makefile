@@ -6,7 +6,7 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2025/06/26 21:36:21 by rvandepu         ###   ########.fr        #
+#    Updated: 2025/06/27 23:26:11 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,7 @@ CFLAGS		+= -pthread
 LDFLAGS		+= -L$(LIBMLX_DIR)/build
 LDLIBS		+= -lmlx42 -ldl -lglfw -lpthread -lm
 
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re test test-asan
 
 all: $(NAME)
 
@@ -70,9 +70,11 @@ fclean: clean
 
 re: fclean all
 
-FSANITIZE := -fsanitize=address
-test: CFLAGS += -Og -g -Wno-error $(FSANITIZE)
-test: LDFLAGS += $(FSANITIZE)
+test-asan: CFLAGS += -fsanitize=address
+test-asan: LDFLAGS += -fsanitize=address
+test-asan: test
+
+test: CFLAGS += -Og -g -Wno-error
 test: re
 
 $(OBJ_DIR):
