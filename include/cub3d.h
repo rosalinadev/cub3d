@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 21:37:58 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/27 22:41:41 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,12 @@ typedef struct s_ctx
 	t_vec2		size;
 	t_raycast	ray;
 	mlx_image_t	*disp;
-	mlx_image_t	*debug;
+	mlx_image_t	*debug_overlay;
 	mlx_image_t	*text;
 	t_kb		kb;
 	bool		paused;
 	uint8_t		ignore_mouse;
+	bool		debug;
 }	t_ctx;
 
 // renderer.c

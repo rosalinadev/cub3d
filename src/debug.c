@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 06:08:23 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/25 22:02:48 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/27 22:42:58 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,24 +87,24 @@ static void	debug_cat(char *b, size_t len, bool *enabled, ...)
 void	draw_debug(t_ctx *ctx, double frametime)
 {
 	char		str[DEBUG_STR_SIZE];
-	static bool	enabled;
 
-	mlx_clear_image(ctx->debug);
+	mlx_clear_image(ctx->debug_overlay);
 	if (ft_bit_check(ctx->kb, P_DEBUG))
 	{
-		enabled = !enabled;
-		ft_printf("[DEBUG] debug overlay state: %d\n", enabled);
+		ctx->debug = !ctx->debug;
+		ft_printf("[DEBUG] debug overlay state: %d\n", ctx->debug);
 		ctx->kb = ft_bit_clear(ctx->kb, P_DEBUG);
 	}
-	if (!enabled)
+	if (!ctx->debug)
 		return ;
 	ft_bzero(str, sizeof(str));
-	debug_cat(str, sizeof(str), &enabled,
+	debug_cat(str, sizeof(str), &ctx->debug,
 		"fps (cap ", I, FPS, "): ", D, 1 / frametime, "\n",
 		"pos x: ", D, ctx->player.pos.x, " y: ", D, ctx->player.pos.y, "\n",
 		"dir x: ", D, ctx->player.dir.x, " y: ", D, ctx->player.dir.y, "\n",
+		"noclip: ", I, ctx->player.noclip, "\n",
 		//"visible sprites: ", I, ft_lstsize((t_list *)ctx->ray.sprites), "\n",
 		NULL);
 	if (str_size(&ctx->assets.font, str).x)
-		draw_str(ctx->debug, &ctx->assets.font, str, (t_vec2u){0, 0});
+		draw_str(ctx->debug_overlay, &ctx->assets.font, str, (t_vec2u){0, 0});
 }

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 21:46:32 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/27 22:41:15 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 
 static inline void	try_move(t_map *map, t_player *plr, t_vec2f np)
 {
+	if (plr->noclip)
+	{
+		plr->pos = np;
+		return ;
+	}
 	if (!collides(get_cell(map, vec2f_floor((t_vec2f){np.x, plr->pos.y}))))
 	{
 		plr->pos.x = np.x;
@@ -79,6 +84,9 @@ static void	handle_input(t_ctx *ctx)
 		ctx->ignore_mouse = MOUSE_IGNORE_CALLS;
 		ctx->kb = ft_bit_clear(ctx->kb, P_PAUSE);
 	}
+	if (ctx->debug && ft_bit_check(ctx->kb, P_NOCLIP))
+		ctx->player.noclip ^= true;
+	ctx->kb = ft_bit_clear(ctx->kb, P_NOCLIP);
 }
 
 void	hook_loop(void *param)

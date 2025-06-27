@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 22:01:01 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/27 22:41:20 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ static bool	init_img(t_ctx *ctx)
 
 	bg = mlx_new_image(ctx->mlx, 1, 2);
 	ctx->disp = mlx_new_image(ctx->mlx, ctx->size.x, ctx->size.y);
-	ctx->debug = mlx_new_image(ctx->mlx, ctx->size.x, ctx->size.y);
+	ctx->debug_overlay = mlx_new_image(ctx->mlx, ctx->size.x, ctx->size.y);
 	ctx->text = mlx_new_image(ctx->mlx, 1, 1);
-	if (!bg || !ctx->disp || !ctx->debug || !ctx->text)
+	if (!bg || !ctx->disp || !ctx->debug_overlay || !ctx->text)
 		return (eno(E_IMG), false);
 	mlx_put_pixel(bg, 0, 0, 0x808080FF);
 	mlx_put_pixel(bg, 0, 1, 0x404040FF);
@@ -66,7 +66,7 @@ static bool	init_img(t_ctx *ctx)
 	if (mlx_image_to_window(ctx->mlx, bg, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->disp, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->text, 0, 0) < 0
-		|| mlx_image_to_window(ctx->mlx, ctx->debug, 0, 0) < 0)
+		|| mlx_image_to_window(ctx->mlx, ctx->debug_overlay, 0, 0) < 0)
 		return (eno(E_DISP), false);
 	return (true);
 }
