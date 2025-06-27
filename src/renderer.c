@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/28 00:43:43 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 01:46:27 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,17 @@
 #include "mlx_utils.h"
 #include "raycast.h"
 
-static void	draw_slice(t_ctx *ctx, uint32_t x, t_raycast *ray, int32_t height)
+static void	draw_slice(t_ctx *ctx, mlx_texture_t *tex,
+		uint32_t x, int32_t height)
 {
-	int32_t			start;
-	int32_t			end;
-	mlx_texture_t	*tex;
-	t_vec2u			tex_pos;
-	t_vec2f			step_pos;
+	int32_t	start;
+	int32_t	end;
+	t_vec2u	tex_pos;
+	t_vec2f	step_pos;
 
 	start = ft_max(2, ((int32_t)ctx->disp->height - height) / 2, 0);
 	end = ft_min(2, (ctx->disp->height + height) / 2 + 1, ctx->disp->height);
-	tex = ctx->assets.tex[ray->hit_side];
-	tex_pos.x = ray->hit_x * tex->width;
+	tex_pos.x = ctx->ray.hit_x * tex->width;
 	if (tex_pos.x >= tex->width)
 		tex_pos.x = tex->width - 1;
 	step_pos.x = (float)tex->height / height;
@@ -68,7 +67,10 @@ void	render_screen(t_ctx *ctx)
 		{
 			height = ctx->disp->width / ctx->ray.dist
 				/ (hypotf(ctx->player.cam.x, ctx->player.cam.y) * 2);
-			draw_slice(ctx, x, &ctx->ray, height);
+			if (ctx->ray.hit_cell->type == C_DOOR)
+				draw_slice(ctx, ctx->assets.tex[A_DOOR], x, height);
+			else
+				draw_slice(ctx, ctx->assets.tex[ctx->ray.hit_side], x, height);
 		}
 		x++;
 	}

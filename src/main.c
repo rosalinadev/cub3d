@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 22:52:44 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 01:47:48 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ int	main(int argc, char *argv[])
 	ctx.assets.meta.path[A_E] = ft_strdup("assets/cub3d_test.png");
 	ctx.assets.meta.path[A_N] = ft_strdup("assets/checkerboard.png");
 	ctx.assets.meta.path[A_S] = ft_strdup("assets/highres.png");
+	ctx.assets.meta.path[A_DOOR] = ft_strdup("assets/edgetest.png");
 	if (!load_assets(&ctx.assets))
 		return (err_p(1, "While loading assets"), cleanup(&ctx), EXIT_FAILURE);
 	// load sprites
