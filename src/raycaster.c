@@ -6,13 +6,12 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:48:59 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/25 20:26:18 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 00:52:04 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 
-#include "defaults.h"
 #include "raycast.h"
 
 static inline void	mirror_ray(t_raycast *ray)
@@ -35,7 +34,7 @@ static inline void	mirror_ray(t_raycast *ray)
 
 static inline void	dda_hooks(t_raycast *ray)
 {
-	if (ray->hit_cell->type == C_MIRROR)
+	if (ray->hit_cell->type == C_MIRROR && !ray->interact)
 		mirror_ray(ray);
 	/*if (!ray->reflected && ray->hit_cell->type == C_SPRITE)
 	{
@@ -48,10 +47,7 @@ static inline void	dda_hooks(t_raycast *ray)
 
 static inline void	dda(t_raycast *ray)
 {
-	int	i;
-
-	i = RENDER_DISTANCE;
-	while (!ray->hit && i--)
+	while (!ray->hit && ray->render_distance--)
 	{
 		if (ray->side.x < ray->side.y)
 		{
@@ -67,7 +63,8 @@ static inline void	dda(t_raycast *ray)
 		}
 		ray->hit_cell = get_cell(ray->map, ray->pos);
 		dda_hooks(ray);
-		if (collides(ray->hit_cell))
+		if ((ray->interact && ray->hit_cell->type == C_DOOR)
+			|| collides(ray->hit_cell))
 			ray->hit = true;
 	}
 	ray->dist = ray->side.x - ray->delta.x;
@@ -76,7 +73,7 @@ static inline void	dda(t_raycast *ray)
 }
 
 // FIXME find root cause of hit_x going negative (WHY?!)
-void	cast_ray(t_raycast *ray)
+void	cast_ray(t_raycast *ray, uint32_t max_dist)
 {
 	ray->pos = vec2f_floor(ray->player->pos);
 	ray->delta = (t_vec2f){fabsf(1 / ray->dir.x), fabsf(1 / ray->dir.y)};
@@ -84,6 +81,7 @@ void	cast_ray(t_raycast *ray)
 	ray->side = (t_vec2f){fabsf((ray->dir.x >= 0) - fabsf(ray->pos.x
 				- ray->player->pos.x)) * ray->delta.x, fabsf((ray->dir.y >= 0)
 			- fabsf(ray->pos.y - ray->player->pos.y)) * ray->delta.y};
+	ray->render_distance = max_dist;
 	ray->hit = false;
 	ray->reflected = false;
 	ray->flip_we = false;

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 23:12:02 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 22:39:38 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 00:19:09 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ static const t_kb_bit	g_was_pressed[MAXKEYCODE] = {
 [MLX_KEY_SPACE] = P_PAUSE,
 [MLX_KEY_M] = P_MINIMAP,
 [MLX_KEY_N] = P_NOCLIP,
+[MLX_KEY_E] = P_INTERACT,
 [MLX_KEY_F3] = P_DEBUG,
 [MLX_KEY_F11] = P_FULLSCREEN,
 };

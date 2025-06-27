@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:49:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 22:50:39 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 00:51:59 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ typedef struct s_raycast
 	t_vec2		step;
 	t_vec2f		side;
 	t_vec2f		delta;
+	uint32_t	render_distance;
+	bool		interact;
 	float		dist;
 	bool		hit;
 	t_cell		*hit_cell;
@@ -39,6 +41,6 @@ typedef struct s_raycast
 }	t_raycast;
 
 // raycaster.c
-void	cast_ray(t_raycast *ray);
+void	cast_ray(t_raycast *ray, uint32_t max_dist);
 
 #endif

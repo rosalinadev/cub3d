@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 22:41:15 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 00:48:16 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "cub3d.h"
 #include "defaults.h"
 #include "mlx_utils.h"
+#include "raycast.h"
 #include "types.h"
 
 static inline void	try_move(t_map *map, t_player *plr, t_vec2f np)
@@ -67,6 +68,21 @@ static void	handle_movement(t_ctx *ctx, double delta)
 	try_move(&ctx->map, &ctx->player, newpos);
 }
 
+#define INTERACT_RANGE 2
+
+static void	interact(t_map *map, t_player *player)
+{
+	t_raycast	ray;
+
+	ray = (t_raycast){.map = map, .player = player,
+		.dir = player->dir, .interact = true};
+	cast_ray(&ray, INTERACT_RANGE);
+	if (!ray.hit)
+		return ;
+	if (ray.hit_cell->type == C_DOOR)
+		ray.hit_cell->door_open ^= true;
+}
+
 // how many cursor hook calls to ignore after pausing/unpausing
 // minimum 1 to reset last position in hook
 #define MOUSE_IGNORE_CALLS 3
@@ -87,6 +103,9 @@ static void	handle_input(t_ctx *ctx)
 	if (ctx->debug && ft_bit_check(ctx->kb, P_NOCLIP))
 		ctx->player.noclip ^= true;
 	ctx->kb = ft_bit_clear(ctx->kb, P_NOCLIP);
+	if (ft_bit_check(ctx->kb, P_INTERACT))
+		interact(&ctx->map, &ctx->player);
+	ctx->kb = ft_bit_clear(ctx->kb, P_INTERACT);
 }
 
 void	hook_loop(void *param)

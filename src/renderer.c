@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/25 17:50:05 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 00:43:43 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "libft.h"
 
 #include "cub3d.h"
+#include "defaults.h"
 #include "mlx_utils.h"
 #include "raycast.h"
 
@@ -62,7 +63,7 @@ void	render_screen(t_ctx *ctx)
 	{
 		ctx->ray.dir = vec2f_add(ctx->player.dir, vec2f_scale(
 					&ctx->player.cam, 2.0 * x / ctx->disp->width - 1));
-		cast_ray(&ctx->ray);
+		cast_ray(&ctx->ray, RENDER_DISTANCE);
 		if (ctx->ray.hit)
 		{
 			height = ctx->disp->width / ctx->ray.dist

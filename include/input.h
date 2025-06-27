@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 19:09:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 22:39:46 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 00:19:03 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef enum e_kb_bit
 	P_PAUSE,
 	P_MINIMAP,
 	P_NOCLIP,
+	P_INTERACT,
 	P_DEBUG,
 	P_FULLSCREEN,
 }	t_kb_bit;
