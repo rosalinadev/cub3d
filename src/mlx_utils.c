@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:54:18 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/22 12:04:34 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/25 23:01:30 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,17 @@ bool	get_win_size(t_vec2 *size, bool fullscreen)
 		mlx_set_setting(MLX_HEADLESS, false);
 	}
 	return (true);
+}
+
+double	get_time(void)
+{
+	static double	offset;
+	static double	last_time;
+	double			time;
+
+	time = mlx_get_time();
+	if (time + offset < last_time)
+		offset = last_time;
+	last_time = time + offset;
+	return (last_time);
 }

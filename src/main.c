@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/23 16:44:39 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/27 22:01:01 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "defaults.h"
 #include "error.h"
 #include "mlx_utils.h"
+#include "types.h"
 
 // TODO usage text
 static bool	parse_args(t_map *map, int argc, char *argv[])
@@ -53,22 +54,29 @@ static bool	init_img(t_ctx *ctx)
 	bg = mlx_new_image(ctx->mlx, 1, 2);
 	ctx->disp = mlx_new_image(ctx->mlx, ctx->size.x, ctx->size.y);
 	ctx->debug = mlx_new_image(ctx->mlx, ctx->size.x, ctx->size.y);
-	if (!bg || !ctx->disp || !ctx->debug)
+	ctx->text = mlx_new_image(ctx->mlx, 1, 1);
+	if (!bg || !ctx->disp || !ctx->debug || !ctx->text)
 		return (eno(E_IMG), false);
 	mlx_put_pixel(bg, 0, 0, 0x808080FF);
 	mlx_put_pixel(bg, 0, 1, 0x404040FF);
-	if (!mlx_resize_image(bg, ctx->size.x, ctx->size.y))
+	mlx_put_pixel(ctx->text, 0, 0, 0x0000007F);
+	if (!mlx_resize_image(bg, ctx->size.x, ctx->size.y)
+		|| !mlx_resize_image(ctx->text, ctx->size.x, ctx->size.y))
 		return (eno(E_IMG), false);
 	if (mlx_image_to_window(ctx->mlx, bg, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->disp, 0, 0) < 0
+		|| mlx_image_to_window(ctx->mlx, ctx->text, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->debug, 0, 0) < 0)
 		return (eno(E_DISP), false);
 	return (true);
 }
 
+#define PAUSED "PAUSED"
+
 static bool	init_win(t_ctx *ctx)
 {
 	static bool	fullscreen = START_FULLSCREEN;
+	t_vec2u		size;
 
 	if (ft_bit_check(ctx->kb, P_FULLSCREEN))
 		fullscreen = !fullscreen;
@@ -80,12 +88,16 @@ static bool	init_win(t_ctx *ctx)
 		return (eno(E_MLX), false);
 	if (!init_img(ctx))
 		return (false);
-	ctx->kb = ft_bit_clear(ctx->kb, P_FULLSCREEN);
-	//mlx_resize_hook(ctx->mlx, &ft_hook_resize, ctx);
+	size = str_size((ctx->assets.font.sc = 2, &ctx->assets.font), PAUSED);
+	if (size.x > (uint32_t)ctx->size.x || size.y > (uint32_t)ctx->size.y)
+		return (eno(E_SIZE), false);
+	draw_str(ctx->text, &ctx->assets.font, PAUSED,
+		(t_vec2u){(ctx->size.x - size.x) / 2, (ctx->size.y - size.y) / 2});
+	ctx->assets.font.sc = FONT_SCALE;
+	ctx->paused ^= true;
+	ctx->kb = ft_bit_set(ft_bit_clear(ctx->kb, P_FULLSCREEN), P_PAUSE);
 	mlx_key_hook(ctx->mlx, &hook_key, &ctx->kb);
-	//mlx_scroll_hook(ctx->mlx, &ft_hook_scroll, ctx);
-	//mlx_mouse_hook(ctx->mlx, &ft_hook_mouse, ctx);
-	//mlx_cursor_hook(ctx->mlx, &ft_hook_cursor, ctx);
+	mlx_cursor_hook(ctx->mlx, &hook_cursor, ctx);
 	mlx_loop_hook(ctx->mlx, &hook_loop, ctx);
 	return (true);
 }

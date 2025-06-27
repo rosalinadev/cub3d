@@ -6,12 +6,13 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 00:35:51 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/17 09:16:05 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/27 22:20:42 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+#include "defaults.h"
 #include "error.h"
 #include "font.h"
 
@@ -44,10 +45,10 @@ bool	init_font(t_font *font)
 	t_vec2u	p;
 	char	c;
 
-	font->tex = mlx_load_png("assets/hall-fetica-bold.png");
+	font->tex = mlx_load_png(FONT_PATH);
 	if (font->tex == NULL)
 		return (eno(E_FONT), false);
-	font->sc = 1;
+	font->sc = FONT_SCALE;
 	p = (t_vec2u){0, FHEIGHT};
 	c = ' ';
 	while (c <= '~')
@@ -62,6 +63,7 @@ static inline void	draw_char(mlx_image_t *i, t_font *f, char c, t_vec2u p)
 {
 	t_char		*m;
 	t_vec2u		o;
+	uint32_t	pixel;
 
 	if (c < ' ' || '~' < c)
 		return ;
@@ -69,18 +71,10 @@ static inline void	draw_char(mlx_image_t *i, t_font *f, char c, t_vec2u p)
 	o = (t_vec2u){0, 0};
 	while (o.y < m->s.y * f->sc)
 	{
-		if (f->tex->pixels[((m->p.y + o.y / f->sc)
-					* f->tex->width + m->p.x + o.x / f->sc) * 4 + 3])
-		{
-			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4] = f->tex-> \
-pixels[((m->p.y + o.y / f->sc) * f->tex->width + m->p.x + o.x / f->sc) * 4];
-			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4 + 1] = f->tex-> \
-pixels[((m->p.y + o.y / f->sc) * f->tex->width + m->p.x + o.x / f->sc) * 4 + 1];
-			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4 + 2] = f->tex-> \
-pixels[((m->p.y + o.y / f->sc) * f->tex->width + m->p.x + o.x / f->sc) * 4 + 2];
-			i->pixels[((p.y + o.y) * i->width + p.x + o.x) * 4 + 3] = f->tex-> \
-pixels[((m->p.y + o.y / f->sc) * f->tex->width + m->p.x + o.x / f->sc) * 4 + 3];
-		}
+		pixel = ((uint32_t *)f->tex->pixels)[(m->p.y + o.y / f->sc)
+			* f->tex->width + m->p.x + o.x / f->sc];
+		if (pixel & 0xFF000000)
+			((uint32_t *)i->pixels)[(p.y + o.y) * i->width + p.x + o.x] = pixel;
 		if (++o.x == m->s.x * f->sc)
 			o.x = (o.y++, 0);
 	}

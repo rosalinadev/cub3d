@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:46:30 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/17 13:42:17 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/25 22:08:55 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static const char	*g_errstr[E__MAX] = {
 [E_BONUS] = "Bonus unimplemented",
 [E_FONT] = "Font loading failed",
 [E_MLX] = "Window initalization failed",
+[E_SIZE] = "Window too small",
 [E_TEX] = "Texture loading failed",
 [E_IMG] = "Failed to create MLX42 image",
 [E_DISP] = "Failed to display image on window",

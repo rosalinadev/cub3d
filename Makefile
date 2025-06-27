@@ -6,7 +6,7 @@
 #    By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 16:11:02 by rvandepu          #+#    #+#              #
-#    Updated: 2025/06/23 18:35:21 by rvandepu         ###   ########.fr        #
+#    Updated: 2025/06/26 21:36:21 by rvandepu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ OBJ_DIR := build
 OBJ     := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 CPPFLAGS += -Iinclude
-CFLAGS   += -std=c23 -Wall -Wextra -Werror -Wpedantic -O3
+CFLAGS   += -Wall -Wextra -Werror -O3
 
 # https://github.com/rosalinadev/libft
 LIBFT_DIR	:= libft

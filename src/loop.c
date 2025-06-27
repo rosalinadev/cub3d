@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:10:25 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/22 12:33:33 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/27 21:46:32 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include "cub3d.h"
 #include "defaults.h"
+#include "mlx_utils.h"
 #include "types.h"
 
 static inline void	try_move(t_map *map, t_player *plr, t_vec2f np)
@@ -61,30 +62,48 @@ static void	handle_movement(t_ctx *ctx, double delta)
 	try_move(&ctx->map, &ctx->player, newpos);
 }
 
+// how many cursor hook calls to ignore after pausing/unpausing
+// minimum 1 to reset last position in hook
+#define MOUSE_IGNORE_CALLS 3
+
+static void	handle_input(t_ctx *ctx)
+{
+	if (ft_bit_check(ctx->kb, P_PAUSE))
+	{
+		ctx->paused = !ctx->paused;
+		ctx->text->enabled = ctx->paused;
+		if (ctx->paused)
+			mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_NORMAL);
+		else
+			mlx_set_cursor_mode(ctx->mlx, MLX_MOUSE_DISABLED);
+		ctx->ignore_mouse = MOUSE_IGNORE_CALLS;
+		ctx->kb = ft_bit_clear(ctx->kb, P_PAUSE);
+	}
+}
+
 void	hook_loop(void *param)
 {
 	t_ctx			*ctx;
-	static double	last_move = -1;
+	static double	last_input = -1;
 	static double	last_frame = -1;
 	double			time;
 
 	ctx = param;
-	time = mlx_get_time();
-	if (time - last_move >= 0.001)
+	time = get_time();
+	if (time - last_input >= 0.001)
 	{
-		handle_movement(ctx, time - last_move);
-		last_move = time;
+		if (!ctx->paused)
+			handle_movement(ctx, time - last_input);
+		last_input = time;
+		handle_input(ctx);
 	}
 	if (time - last_frame >= 1.0 / FPS)
 	{
-		time = mlx_get_time();
+		time = get_time();
 		last_frame = time;
 		render_screen(ctx);
-		draw_debug(ctx, mlx_get_time() - time);
+		draw_debug(ctx, get_time() - time);
 	}
-	if (!ft_bit_check(ctx->kb, P_QUIT) && !ft_bit_check(ctx->kb, P_FULLSCREEN))
-		return ;
-	mlx_close_window(ctx->mlx);
-	last_move = -1;
-	last_frame = -1;
+	if (ft_bit_check(ctx->kb, P_QUIT) || ft_bit_check(ctx->kb, P_FULLSCREEN))
+		mlx_close_window(ctx->mlx);
 }

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:53:52 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/22 12:04:29 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/25 22:59:42 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,6 @@
 
 void	mlx_clear_image(mlx_image_t *img);
 bool	get_win_size(t_vec2 *size, bool fullscreen);
+double	get_time(void);
 
 #endif

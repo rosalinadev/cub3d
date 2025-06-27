@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 06:08:23 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/25 21:12:05 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/25 22:02:48 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static void	debug_cat(char *b, size_t len, bool *enabled, ...)
 	*enabled = false;
 }
 
-#define DEBUG_STR_SIZE 72
+#define DEBUG_STR_SIZE 1024
 
 void	draw_debug(t_ctx *ctx, double frametime)
 {
