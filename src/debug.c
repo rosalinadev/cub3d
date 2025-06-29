@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 06:08:23 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 22:42:58 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 19:59:50 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	draw_debug(t_ctx *ctx, double frametime)
 		"pos x: ", D, ctx->player.pos.x, " y: ", D, ctx->player.pos.y, "\n",
 		"dir x: ", D, ctx->player.dir.x, " y: ", D, ctx->player.dir.y, "\n",
 		"noclip: ", I, ctx->player.noclip, "\n",
-		//"visible sprites: ", I, ft_lstsize((t_list *)ctx->ray.sprites), "\n",
+		"visible sprites: ", I, ft_lstsize((t_list *)ctx->ray.sprites), "\n",
 		NULL);
 	if (str_size(&ctx->assets.font, str).x)
 		draw_str(ctx->debug_overlay, &ctx->assets.font, str, (t_vec2u){0, 0});

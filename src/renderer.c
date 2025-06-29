@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/29 20:03:07 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/29 21:42:28 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	render_screen(t_ctx *ctx)
 	int			height;
 
 	mlx_clear_image(ctx->disp);
-	// TODO clear sprite render queue
+	unlink_sprites(&ctx->ray.sprites);
 	ctx->ray = (t_raycast){.map = &ctx->map, .player = &ctx->player};
 	x = 0;
 	while (x < ctx->disp->width)

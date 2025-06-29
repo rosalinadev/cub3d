@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 03:56:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/23 16:50:24 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 20:54:40 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,13 @@ typedef struct s_sprite
 	t_sprite	*next;
 	t_frame		**frame;
 	float		dist;
+	bool		added;
 }	t_sprite;
 
 // sprites.c
 t_vec2u	sprite_pos(t_map *map, t_sprite *sprite);
-void	queue_sprite(t_sprite **lst, t_sprite *sprite);
+void	queue_sprite(t_sprite **lst, t_sprite *sprite, t_vec2f rel_pos);
+void	unlink_sprites(t_sprite **sprite);
 
 typedef enum e_cell_type
 {

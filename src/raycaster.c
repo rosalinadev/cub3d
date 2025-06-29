@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:48:59 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/28 00:52:04 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/28 20:43:43 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,12 @@ static inline void	mirror_ray(t_raycast *ray)
 
 static inline void	dda_hooks(t_raycast *ray)
 {
-	if (ray->hit_cell->type == C_MIRROR && !ray->interact)
+	if (ray->hit_cell->type == C_MIRROR)
 		mirror_ray(ray);
-	/*if (!ray->reflected && ray->hit_cell->type == C_SPRITE)
-	{
-		ray->hit_cell->sprite.dist = ray->side.x - ray->delta.x;
-		if (ray->hit_side == SIDE_N || ray->hit_side == SIDE_S)
-			ray->hit_cell->sprite.dist = ray->side.y - ray->delta.y;
-		queue_sprite(&ray->sprites, &ray->hit_cell->sprite);
-	}*/
+	if (!ray->reflected && ray->hit_cell->type == C_SPRITE
+		&& !ray->hit_cell->sprite.added)
+		queue_sprite(&ray->sprites, &ray->hit_cell->sprite, vec2f_sub((t_vec2f)
+			{ray->pos.x + 0.5, ray->pos.y + 0.5}, ray->player->pos));
 }
 
 static inline void	dda(t_raycast *ray)
@@ -62,7 +59,8 @@ static inline void	dda(t_raycast *ray)
 			ray->hit_side = 2 + (ray->step.y == 1);
 		}
 		ray->hit_cell = get_cell(ray->map, ray->pos);
-		dda_hooks(ray);
+		if (!ray->interact)
+			dda_hooks(ray);
 		if ((ray->interact && ray->hit_cell->type == C_DOOR)
 			|| collides(ray->hit_cell))
 			ray->hit = true;
