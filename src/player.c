@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 02:20:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/23 18:31:49 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:02:35 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,5 @@ void	player_set_fov(t_player *player, float fov)
 		player->fov = fov;
 	s = tanf(player->fov * atan(1) * 4 / 180.0 / 2.0);
 	player->cam = (t_vec2f){-player->dir.y * s, player->dir.x * s};
+	player->cam_len = hypotf(player->cam.x, player->cam.y) * 2;
 }

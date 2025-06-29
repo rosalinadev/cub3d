@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 02:19:14 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 22:38:14 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:01:27 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_player
 	float	fov;
 	// half of fov
 	t_vec2f	cam;
+	float	cam_len;
 }	t_player;
 
 // player.c

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/28 01:46:27 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:03:07 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,7 @@ void	render_screen(t_ctx *ctx)
 		cast_ray(&ctx->ray, RENDER_DISTANCE);
 		if (ctx->ray.hit)
 		{
-			height = ctx->disp->width / ctx->ray.dist
-				/ (hypotf(ctx->player.cam.x, ctx->player.cam.y) * 2);
+			height = ctx->disp->width / ctx->ray.dist / ctx->player.cam_len;
 			if (ctx->ray.hit_cell->type == C_DOOR)
 				draw_slice(ctx, ctx->assets.tex[A_DOOR], x, height);
 			else
