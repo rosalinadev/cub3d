@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 07:27:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/20 22:34:05 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/09 12:33:50 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,13 @@
 typedef union u_color
 {
 	uint32_t	col;
-	uint8_t		rgba[4];
+	struct
+	{
+		uint8_t		r;
+		uint8_t		g;
+		uint8_t		b;
+		uint8_t		a;
+	};
 }	t_col;
 
 typedef struct s_vec2u

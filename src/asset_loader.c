@@ -6,13 +6,14 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/22 12:14:49 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/08 17:55:33 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include <stdlib.h>
 #include "MLX42/MLX42.h"
+#include "libft.h"
 
 #include "assets.h"
 #include "error.h"
@@ -62,14 +63,35 @@ void	free_assets(t_assets *assets)
 	}
 	free(assets->meta.sprite_dir);
 	assets->meta.sprite_dir = NULL;
-	if (!assets->sprite)
-		return ;
 	i = assets->meta.sprite_frames;
 	while (assets->sprite && i--)
-		if ((assets->sprite + i)->tex)
-			mlx_delete_texture((assets->sprite + i)->tex);
+		if (assets->sprite[i].tex)
+			mlx_delete_texture(assets->sprite[i].tex);
 	free(assets->sprite);
 	assets->sprite = NULL;
+}
+
+bool	load_sprites(t_assets *assets)
+{
+	char		*filename;
+	uint32_t	frame;
+
+	assets->sprite = malloc(sizeof(t_frame) * assets->meta.sprite_frames);
+	if (!assets->sprite)
+		return (eno(E_MEM), false);
+	filename = assets->meta.sprite_dir + ft_strlen(assets->meta.sprite_dir);
+	frame = 0;
+	while (frame < assets->meta.sprite_frames)
+	{
+		ft_bzero(filename, FRAME_SIZE);
+		ft_itoa_buf(frame, filename);
+		ft_strlcat(filename, ".png", FRAME_SIZE + 1);
+		if (!load_asset(assets->meta.sprite_dir, &assets->sprite[frame++].tex))
+			return (false);
+		assets->sprite[frame - 1].next = &assets->sprite[frame];
+	}
+	assets->sprite[assets->meta.sprite_frames - 1].next = assets->sprite;
+	return (true);
 }
 
 bool	load_assets(t_assets *assets)
@@ -82,6 +104,7 @@ bool	load_assets(t_assets *assets)
 	while (id-- != A__FIRST)
 		if (!load_asset(assets->meta.path[id], &assets->tex[id]))
 			return (free_assets(assets), false);
-	// TODO load sprite frames
+	if (!load_sprites(assets))
+		return (free_assets(assets), false);
 	return (true);
 }

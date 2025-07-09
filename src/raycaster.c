@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 13:48:59 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/28 20:43:43 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/02 07:49:15 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ static inline void	dda_hooks(t_raycast *ray)
 		mirror_ray(ray);
 	if (!ray->reflected && ray->hit_cell->type == C_SPRITE
 		&& !ray->hit_cell->sprite.added)
-		queue_sprite(&ray->sprites, &ray->hit_cell->sprite, vec2f_sub((t_vec2f)
-			{ray->pos.x + 0.5, ray->pos.y + 0.5}, ray->player->pos));
+		queue_sprite(&ray->sprites, &ray->hit_cell->sprite,
+			ray->map, ray->player->pos);
 }
 
 static inline void	dda(t_raycast *ray)

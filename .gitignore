@@ -5,6 +5,8 @@ assets/*
 !assets/edgetest.png
 !assets/gradient.png
 !assets/highres.sh
+!assets/blahaj/
+!assets/brick/
 cgtutor
 build
 cub3D

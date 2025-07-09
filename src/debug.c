@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 06:08:23 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/28 19:59:50 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:32:03 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static bool	dtoa_cat(double d, char *str, size_t l)
 #define I "I"
 #define D "D"
 
+// thanks for nothing 42, not having sprintf is annoying.
 static void	debug_cat(char *b, size_t len, bool *enabled, ...)
 {
 	bool	error;

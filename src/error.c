@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:46:30 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/25 22:08:55 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:10:42 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static const char	*g_errstr[E__MAX] = {
 [E_MAP_SPAWN] = "Map has no spawn point",
 [E_MAP_SPAWNS] = "Map has multiple spawn points",
 [E_MAP_WALLS] = "Map is not enclosed by walls",
-[E_BONUS] = "Bonus unimplemented",
 [E_FONT] = "Font loading failed",
 [E_MLX] = "Window initalization failed",
 [E_SIZE] = "Window too small",

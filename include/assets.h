@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:39:48 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/22 12:13:37 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/09 12:41:01 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 
 # include "font.h"
 # include "side.h"
+
+// 11 for int and 4 for ".png"
+# define FRAME_SIZE 15
 
 typedef struct s_meta
 {
@@ -40,6 +43,8 @@ typedef struct s_assets
 	t_meta			meta;
 	mlx_texture_t	*tex[A__SIZE];
 	t_frame			*sprite;
+	uint32_t		floor;
+	uint32_t		ceil;
 }	t_assets;
 
 // asset_loader.c

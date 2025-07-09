@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/28 01:47:48 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:52:17 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 #include "mlx_utils.h"
 #include "types.h"
 
-// TODO usage text
 static bool	parse_args(t_map *map, int argc, char *argv[])
 {
 	char	*s;
@@ -30,41 +29,35 @@ static bool	parse_args(t_map *map, int argc, char *argv[])
 	if (argv[0] != NULL)
 		s = argv[0];
 	if (argc < 2)
-		return (((printf("Usage: %s map"MAP_EXT"(_bonus)\n\n"
-						"Keybindings:\n"
-						"\tWASD: move\n"
-						"\tMouse: look left/right\n"
-						"\tEscape: exit\n",
-						s))), eno(E__NOPRINT), false);
+		return (ft_printf("Usage: %s map"MAP_EXT"("BONUS_SUFFIX")\n\n"
+				"Keybindings:\n"
+				"  WASD: move\n"
+				"  ← → or mouse: look around\n"
+				"  E: interact (open/close doors)\n"
+				"  Space: pause\n"
+				"  F3: debug overlay\n"
+				"  F11: fullscreen toggle\n"
+				"  Escape: exit\n",
+				s), exit(EXIT_SUCCESS), false);
 	s = ft_strrchr(argv[1], MAP_EXT[0]);
 	if (s == NULL || (ft_strcmp(s, MAP_EXT) != 0
-			&& ft_strcmp(s, MAP_EXT"_bonus") != 0))
+			&& ft_strcmp(s, MAP_EXT BONUS_SUFFIX) != 0))
 		return (eno(E_MAP_EXT), false);
-	map->is_bonus = ft_strcmp(s, MAP_EXT"_bonus") == 0;
-	if (DISABLE_BONUS && map->is_bonus) // TODO remove when implemented
-		return (eno(E_BONUS), false);
+	map->is_bonus = ft_strcmp(s, MAP_EXT BONUS_SUFFIX) == 0;
 	return (true);
 }
 
-// TODO pull ceil and floor colors from metadata
 static bool	init_img(t_ctx *ctx)
 {
-	mlx_image_t	*bg;
-
-	bg = mlx_new_image(ctx->mlx, 1, 2);
 	ctx->disp = mlx_new_image(ctx->mlx, ctx->size.x, ctx->size.y);
 	ctx->debug_overlay = mlx_new_image(ctx->mlx, ctx->size.x, ctx->size.y);
 	ctx->text = mlx_new_image(ctx->mlx, 1, 1);
-	if (!bg || !ctx->disp || !ctx->debug_overlay || !ctx->text)
+	if (!ctx->disp || !ctx->debug_overlay || !ctx->text)
 		return (eno(E_IMG), false);
-	mlx_put_pixel(bg, 0, 0, 0x808080FF);
-	mlx_put_pixel(bg, 0, 1, 0x404040FF);
 	mlx_put_pixel(ctx->text, 0, 0, 0x0000007F);
-	if (!mlx_resize_image(bg, ctx->size.x, ctx->size.y)
-		|| !mlx_resize_image(ctx->text, ctx->size.x, ctx->size.y))
+	if (!mlx_resize_image(ctx->text, ctx->size.x, ctx->size.y))
 		return (eno(E_IMG), false);
-	if (mlx_image_to_window(ctx->mlx, bg, 0, 0) < 0
-		|| mlx_image_to_window(ctx->mlx, ctx->disp, 0, 0) < 0
+	if (mlx_image_to_window(ctx->mlx, ctx->disp, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->text, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->debug_overlay, 0, 0) < 0)
 		return (eno(E_DISP), false);
@@ -111,27 +104,17 @@ static void	cleanup(t_ctx *ctx)
 		mlx_terminate(ctx->mlx);
 }
 
-// FIXME:
-//  - fixup errors to use new codebase
-//  - remember to free gnl on error
 // TODO:
 //  - map loading:
 //   - parameter parsing
-//	 - sprites
-//  - animated sprites
-//  - mouse support:
-//   - hide cursor
-//   - snap cursor to window center
-//   - hook movement into rotation
-//   - pause menu to quit window?
 //  - minimap (follows player if too big)
-// XXX future issues
-// - correctly scaling dir and plane vects
-// - correctly scaling sprite distance
+
+//#define SPRITE_PATH "assets/blahaj/"
+#define SPRITE_PATH "assets/brick/"
 
 int	main(int argc, char *argv[])
 {
-	static t_ctx	ctx;
+	static t_ctx	ctx = {.paused = START_PAUSED};
 
 	if (!parse_args(&ctx.map, argc, argv))
 		return (err_p(1, "While parsing arguments"), EXIT_FAILURE);
@@ -145,9 +128,13 @@ int	main(int argc, char *argv[])
 	ctx.assets.meta.path[A_N] = ft_strdup("assets/checkerboard.png");
 	ctx.assets.meta.path[A_S] = ft_strdup("assets/highres.png");
 	ctx.assets.meta.path[A_DOOR] = ft_strdup("assets/edgetest.png");
+	ctx.assets.meta.sprite_dir = ft_calloc(sizeof(SPRITE_PATH) + FRAME_SIZE, 1);
+	ft_strlcat(ctx.assets.meta.sprite_dir, SPRITE_PATH, sizeof(SPRITE_PATH) + FRAME_SIZE);
+	ctx.assets.meta.sprite_frames = 15;
+	ctx.assets.ceil = 0xFF808080;
+	ctx.assets.floor = 0xFF404040;
 	if (!load_assets(&ctx.assets))
 		return (err_p(1, "While loading assets"), cleanup(&ctx), EXIT_FAILURE);
-	// load sprites
 	printf("width:%u height:%u\n", ctx.map.size.x, ctx.map.size.y);
 	printf("spawn pos x:%u y:%u\n", ctx.map.spawn_pos.x, ctx.map.spawn_pos.y);
 	printf("spawn dir x:%f y:%f\n", ctx.map.spawn_facing.x,
