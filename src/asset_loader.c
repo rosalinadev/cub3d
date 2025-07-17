@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/08 17:55:33 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 01:46:12 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static bool	load_asset(char *path, mlx_texture_t **ret)
 	size_t			i;
 
 	if (!path)
-		return (true);
+		return (eno(E_TEXPATH), false);
 	tex = mlx_load_png(path);
 	if (!tex)
 		return (eno(E_TEX), err_p(2, "While loading PNG asset", path),
@@ -76,6 +76,8 @@ bool	load_sprites(t_assets *assets)
 	char		*filename;
 	uint32_t	frame;
 
+	if (!assets->meta.sprite_frames)
+		return (eno(E_FRAMES), false);
 	assets->sprite = malloc(sizeof(t_frame) * assets->meta.sprite_frames);
 	if (!assets->sprite)
 		return (eno(E_MEM), false);
@@ -94,17 +96,19 @@ bool	load_sprites(t_assets *assets)
 	return (true);
 }
 
-bool	load_assets(t_assets *assets)
+bool	load_assets(t_assets *assets, bool is_bonus)
 {
 	t_side	id;
 
 	if (!init_font(&assets->font))
 		return (false);
-	id = A__SIZE;
+	id = A__SIZE_MAND;
+	if (is_bonus)
+		id = A__SIZE_BONUS;
 	while (id-- != A__FIRST)
 		if (!load_asset(assets->meta.path[id], &assets->tex[id]))
 			return (free_assets(assets), false);
-	if (!load_sprites(assets))
+	if (is_bonus && !load_sprites(assets))
 		return (free_assets(assets), false);
 	return (true);
 }

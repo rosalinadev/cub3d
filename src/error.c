@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:46:30 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/09 14:10:42 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 01:43:57 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ static const char	*g_errstr[E__MAX] = {
 [E_FONT] = "Font loading failed",
 [E_MLX] = "Window initalization failed",
 [E_SIZE] = "Window too small",
+[E_TEXPATH] = "Texture missing path",
 [E_TEX] = "Texture loading failed",
+[E_FRAMES] = "Invalid number of sprite frames",
 [E_IMG] = "Failed to create MLX42 image",
 [E_DISP] = "Failed to display image on window",
 };

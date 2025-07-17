@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/17 22:53:51 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 01:48:28 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ int	main(int argc, char *argv[])
 	ctx.assets.meta.sprite_frames = 15;
 	ctx.assets.ceil = 0xFF808080;
 	ctx.assets.floor = 0xFF404040;
-	if (!load_assets(&ctx.assets))
+	if (!load_assets(&ctx.assets, ctx.map.is_bonus))
 		return (err_p(1, "While loading assets"), cleanup(&ctx), EXIT_FAILURE);
 	printf("width:%u height:%u\n", ctx.map.size.x, ctx.map.size.y);
 	printf("spawn pos x:%u y:%u\n", ctx.map.spawn_pos.x, ctx.map.spawn_pos.y);

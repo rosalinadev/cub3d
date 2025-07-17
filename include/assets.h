@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:39:48 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/09 12:41:01 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 01:46:24 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,6 @@ typedef struct s_assets
 
 // asset_loader.c
 void	free_assets(t_assets *assets);
-bool	load_assets(t_assets *assets);
+bool	load_assets(t_assets *assets, bool is_bonus);
 
 #endif

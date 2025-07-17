@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 04:46:54 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/09 14:10:39 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 01:44:20 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ typedef enum e_eno
 	E_FONT,
 	E_MLX,
 	E_SIZE,
+	E_TEXPATH,
 	E_TEX,
+	E_FRAMES,
 	E_IMG,
 	E_DISP,
 	E__MAX

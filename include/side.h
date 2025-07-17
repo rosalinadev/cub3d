@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 02:55:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/21 05:49:49 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 01:45:56 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ typedef enum e_side
 	A_E,
 	A_N,
 	A_S,
-	A_DOOR,
-	A__SIZE
+	A__SIZE_MAND,
+	A_DOOR = A__SIZE_MAND,
+	A__SIZE_BONUS,
+	A__SIZE = A__SIZE_BONUS
 }	t_side;
 
 #endif
