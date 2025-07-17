@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 15:30:01 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/06 16:28:15 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/17 22:42:44 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_draw
 	uint32_t		x;
 	uint32_t		h;
 	t_vec2u			pos;
+	uint32_t		*hbuf;
 }	t_draw;
 
 #endif

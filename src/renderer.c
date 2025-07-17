@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 07:26:28 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/09 13:01:32 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/17 22:54:34 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,6 @@
 #include "render.h"
 #include "types.h"
 
-#if false
-# define FIXED_BITS 16
-
-static void	draw_slice(t_draw *d)
-{
-	uint64_t	step;
-	uint64_t	pos;
-	int32_t		y;
-
-	step = ((uint64_t)d->tex->height << FIXED_BITS * 2)
-		/ ((uint64_t)d->h << FIXED_BITS);
-	pos = (uint64_t)(d->start + ((float)d->h - d->disp->height) / 2) * step;
-	y = d->start;
-	while (y <= d->end)
-	{
-		d->pos.y = pos >> FIXED_BITS;
-		if (d->pos.y >= d->tex->height)
-			d->pos.y = d->tex->height - 1;
-		pos += step;
-		((uint32_t *)d->disp->pixels)[d->disp->width * y++ + d->x] = ((uint32_t
-					*)d->tex->pixels)[d->tex->height * d->pos.x + d->pos.y];
-	}
-}
-#else
-
 static void	draw_slice(t_draw *d)
 {
 	float		step;
@@ -55,6 +30,9 @@ static void	draw_slice(t_draw *d)
 	uint32_t	*px;
 	uint32_t	v;
 
+	if (d->h < d->hbuf[d->x])
+		return ;
+	d->hbuf[d->x] = d->h;
 	step = (float)d->tex->height / d->h;
 	pos = ceilf(d->start + ((float)d->h
 				- d->disp->height) / 2) * step;
@@ -70,7 +48,6 @@ static void	draw_slice(t_draw *d)
 		set_pixel((t_col *)px, (t_col){.col = v});
 	}
 }
-#endif
 
 static void	render_slice(t_draw *d, mlx_texture_t *tex, t_raycast *ray)
 {
@@ -141,7 +118,8 @@ void	render_screen(t_ctx *ctx)
 	draw_background(ctx->disp, ctx->assets.ceil, ctx->assets.floor);
 	unlink_sprites(&ctx->ray.sprites);
 	ctx->ray = (t_raycast){.map = &ctx->map, .player = &ctx->player};
-	draw = (t_draw){.disp = ctx->disp};
+	draw = (t_draw){.disp = ctx->disp, .hbuf = ctx->hbuf};
+	ft_bzero(draw.hbuf, sizeof(*draw.hbuf) * ctx->size.x);
 	while (draw.x < ctx->disp->width)
 	{
 		ctx->ray.dir = vec2f_add(ctx->player.dir, vec2f_scale(

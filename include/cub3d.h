@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:09:07 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/27 22:41:41 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/17 22:44:51 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_ctx
 	mlx_image_t	*disp;
 	mlx_image_t	*debug_overlay;
 	mlx_image_t	*text;
+	uint32_t	*hbuf;
 	t_kb		kb;
 	bool		paused;
 	uint8_t		ignore_mouse;

@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/09 14:52:17 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/17 22:53:51 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ static bool	init_img(t_ctx *ctx)
 		|| mlx_image_to_window(ctx->mlx, ctx->text, 0, 0) < 0
 		|| mlx_image_to_window(ctx->mlx, ctx->debug_overlay, 0, 0) < 0)
 		return (eno(E_DISP), false);
+	ctx->hbuf = malloc(sizeof(*ctx->hbuf) * ctx->size.x);
+	if (!ctx->hbuf)
+		return (eno(E_MEM), false);
 	return (true);
 }
 
@@ -102,6 +105,8 @@ static void	cleanup(t_ctx *ctx)
 	free_assets(&ctx->assets);
 	if (ctx->mlx)
 		mlx_terminate(ctx->mlx);
+	free(ctx->hbuf);
+	ctx->hbuf = NULL;
 }
 
 // TODO:
@@ -148,6 +153,8 @@ int	main(int argc, char *argv[])
 		mlx_loop(ctx.mlx);
 		mlx_terminate(ctx.mlx);
 		ctx.mlx = NULL;
+		free(ctx.hbuf);
+		ctx.hbuf = NULL;
 		if (!ft_bit_check(ctx.kb, P_FULLSCREEN))
 			break ;
 	}
