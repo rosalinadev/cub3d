@@ -1,3 +1,4 @@
+.vscode
 assets/*
 !assets/hall-fetica-bold.png
 !assets/checkerboard.png

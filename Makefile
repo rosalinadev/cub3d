@@ -16,6 +16,7 @@ SRC  := main.c \
 		loop.c \
 		hooks.c \
 		map_loader.c \
+		metadata_parser.c \
 		map_utils.c \
 		player.c \
 		asset_loader.c \

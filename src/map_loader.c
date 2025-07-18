@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/06/23 16:51:21 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 02:15:06 by vdunatte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,9 @@ static bool	is_enclosed(t_map *map, t_vec2 pos, bool *mem)
 	return (enclosed);
 }
 
+// TODO remove
+bool	parse_meta(int fd, t_meta *meta, bool is_bonus);
+
 bool	load_map(const char *path, t_map *map, t_assets *assets)
 {
 	int		fd;
@@ -136,8 +139,8 @@ bool	load_map(const char *path, t_map *map, t_assets *assets)
 	if (fd < 0)
 		return (eno(E_OPEN), false);
 	map->assets = assets;
-	// TODO parse map metadata
-	if (!read_map(map, fd, 0))
+	if (!parse_meta(fd, &assets->meta, map->is_bonus)
+		|| !read_map(map, fd, 0))
 		return (close(fd), free_gnl(), false);
 	close(fd);
 	mem = ft_calloc(map->size.x * map->size.y, sizeof(*mem));
