@@ -1,3 +1,12 @@
+WE assets/gradient.png
+EA assets/highres.png
+NO assets/cub3d_test.png
+SO assets/checkerboard.png
+D assets/edgetest.png
+SP 15 assets/blahaj/
+C 255,6,181
+F 255,181,6
+
 1M11111M1
 M0000000M
 100010001

@@ -1,6 +1,8 @@
 WE assets/gradient.png
 NO                        assets/cub3d_test.png
 
+C 255,150,255
+F 111,255,111
 
             
 SO assets/checkerboard.png
