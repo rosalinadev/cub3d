@@ -5,7 +5,7 @@ SO assets/checkerboard.png
 C 255,6,181
 F 255,181,6
 D assets/edgetest.png
-SP 15 assets/blahaj/
+SP assets/blahaj/ 15
 
 1M111111111111111M1
 M00000000000000000M

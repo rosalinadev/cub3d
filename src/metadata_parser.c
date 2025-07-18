@@ -6,7 +6,7 @@
 /*   By: vdunatte <vdunatte@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 00:00:46 by vdunatte          #+#    #+#             */
-/*   Updated: 2025/07/18 05:24:19 by vdunatte         ###   ########.fr       */
+/*   Updated: 2025/07/19 00:10:36 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,42 +16,35 @@
 #include "assets.h"
 #include "error.h"
 
-bool	get_path(char *line, char **path)
+static bool	get_path_num(char *line, char **path, uint32_t *frames)
 {
-	int	i;
+	size_t	len;
 
-	i = 0;
 	if (*path != NULL)
 		return (eno(E_META_DUPL), false);
-	while (line[i] == ' ')
-		i++;
-	*path = ft_strdup(&line[i]);
+	while (*line == ' ')
+		line++;
+	len = ft_strcspn(line, " ");
+	*path = ft_calloc(len + FRAME_SIZE + 1, 1);
 	if (*path == NULL)
 		return (eno(E_MEM), false);
+	ft_strlcat(*path, line, len + 1);
+	if (frames)
+	{
+		line += len;
+		while (*line == ' ')
+			line++;
+		len = ft_strspn(line, "0123456789");
+		if (!len || len > 9)
+			return (eno(E_FRAMES), false);
+		*frames = ft_atoi(line);
+		if (!*frames)
+			return (eno(E_FRAMES), false);
+	}
 	return (true);
 }
 
-bool	get_sprite(char *line, t_meta *meta)
-{
-	int	i;
-
-	i = 0;
-	if (meta->sprite_dir != NULL)
-		return (eno(E_META_DUPL), false);
-	while (line[i] == ' ')
-		i++;
-	meta->sprite_frames = ft_atoi(&line[i]);
-	i += ft_strcspn(&line[i], " ");
-	while (line[i] == ' ')
-		i++;
-	meta->sprite_dir = ft_calloc(ft_strlen(&line[i]) + FRAME_SIZE + 1, 1);
-	if (meta->sprite_dir == NULL)
-		return (eno(E_MEM), false);
-	ft_strlcat(meta->sprite_dir, &line[i], ft_strlen(&line[i]) + FRAME_SIZE +1);
-	return (true);
-}
-
-bool	ceil_floor(char *line, t_col *col)
+static bool	get_color(char *line, t_col *col)
 {
 	int		i;
 	int		val;
@@ -79,33 +72,34 @@ bool	ceil_floor(char *line, t_col *col)
 	return (true);
 }
 
-bool	match(char *line, t_meta *meta, bool is_bonus)
+static bool	match(char *line, t_meta *meta, bool is_bonus)
 {
 	if (ft_strlen(line) < 2)
 		return (eno(E_META_IDENT), false);
 	if (line[0] == 'N' && line[1] == 'O')
-		return (get_path(&(line[2]), &meta->path[A_N]));
+		return (get_path_num(&line[2], &meta->path[A_N], NULL));
 	if (line[0] == 'S' && line[1] == 'O')
-		return (get_path(&(line[2]), &meta->path[A_S]));
+		return (get_path_num(&line[2], &meta->path[A_S], NULL));
 	if (line[0] == 'W' && line[1] == 'E')
-		return (get_path(&(line[2]), &meta->path[A_W]));
+		return (get_path_num(&line[2], &meta->path[A_W], NULL));
 	if (line[0] == 'E' && line[1] == 'A')
-		return (get_path(&(line[2]), &meta->path[A_E]));
+		return (get_path_num(&line[2], &meta->path[A_E], NULL));
 	if (line[0] == 'C')
-		return (ceil_floor(&line[1], &meta->ceil));
+		return (get_color(&line[1], &meta->ceil));
 	if (line[0] == 'F')
-		return (ceil_floor(&line[1], &meta->floor));
+		return (get_color(&line[1], &meta->floor));
 	if (is_bonus)
 	{
 		if (line[0] == 'D')
-			return (get_path(&(line[1]), &meta->path[A_DOOR]));
+			return (get_path_num(&line[1], &meta->path[A_DOOR], NULL));
 		if (line[0] == 'S' && line[1] == 'P')
-			return (get_sprite(&(line[2]), meta));
+			return (get_path_num(&line[2], &meta->sprite_dir,
+					&meta->sprite_frames));
 	}
 	return (eno(E_META_IDENT), false);
 }
 
-bool	check(t_meta *meta, bool is_bonus)
+static bool	check(t_meta *meta, bool is_bonus)
 {
 	int	i;
 

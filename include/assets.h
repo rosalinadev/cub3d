@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:39:48 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/18 04:17:05 by vdunatte         ###   ########.fr       */
+/*   Updated: 2025/07/19 00:13:13 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ typedef struct s_assets
 	uint32_t		ceil;
 	uint32_t		floor;
 }	t_assets;
+
+// metadata_parser.c
+bool	parse_meta(int fd, t_meta *meta, bool is_bonus);
 
 // asset_loader.c
 void	free_assets(t_assets *assets);

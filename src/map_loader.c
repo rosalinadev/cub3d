@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/18 05:26:47 by vdunatte         ###   ########.fr       */
+/*   Updated: 2025/07/19 00:12:49 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,6 @@ static bool	is_enclosed(t_map *map, t_vec2 pos, bool *mem)
 	is_enclosed(map, (t_vec2){pos.x, pos.y - 1}, mem);
 	return (enclosed);
 }
-
-// TODO remove
-bool	parse_meta(int fd, t_meta *meta, bool is_bonus);
 
 bool	load_map(const char *path, t_map *map, t_assets *assets)
 {

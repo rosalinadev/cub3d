@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/18 05:02:03 by vdunatte         ###   ########.fr       */
+/*   Updated: 2025/07/19 00:12:13 by rvandepu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,20 +121,13 @@ int	main(int argc, char *argv[])
 	if (!load_map(argv[1], &ctx.map, &ctx.assets))
 		return (err_p(1, "While loading map"), EXIT_FAILURE);
 	player_respawn(&ctx.player, &ctx.map);
-	printf("player pos x:%f y:%f\n", ctx.player.pos.x, ctx.player.pos.y);
-	printf("player dir x:%f y:%f\n", ctx.player.dir.x, ctx.player.dir.y);
 	if (!load_assets(&ctx.assets, ctx.map.is_bonus))
 		return (err_p(1, "While loading assets"), cleanup(&ctx), EXIT_FAILURE);
-	printf("width:%u height:%u\n", ctx.map.size.x, ctx.map.size.y);
-	printf("spawn pos x:%u y:%u\n", ctx.map.spawn_pos.x, ctx.map.spawn_pos.y);
-	printf("spawn dir x:%f y:%f\n", ctx.map.spawn_facing.x,
-		ctx.map.spawn_facing.y);
 	while (true)
 	{
 		if (!init_win(&ctx))
 			return (err_p(1, "While creating window"),
 				cleanup(&ctx), EXIT_FAILURE);
-		printf("screen width:%u height:%u\n", ctx.size.x, ctx.size.y);
 		mlx_loop(ctx.mlx);
 		mlx_terminate(ctx.mlx);
 		ctx.mlx = NULL;
