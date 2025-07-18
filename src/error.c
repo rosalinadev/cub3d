@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:46:30 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/18 01:43:57 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 05:14:20 by vdunatte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ static const char	*g_errstr[E__MAX] = {
 [E_MAP_SPAWN] = "Map has no spawn point",
 [E_MAP_SPAWNS] = "Map has multiple spawn points",
 [E_MAP_WALLS] = "Map is not enclosed by walls",
+[E_META_IDENT] = "Metadata has invalid identifier (missing identifier?)",
+[E_META_DUPL] = "Metadata has duplicate identifier",
+[E_META_COL_RANGE] = "Metadata color outside of range 0-255",
+[E_META_COL_FMT] = "Metadata color improperly formatted",
+[E_META_EOF] = "End of file reached while parsing metadata",
 [E_FONT] = "Font loading failed",
 [E_MLX] = "Window initalization failed",
 [E_SIZE] = "Window too small",

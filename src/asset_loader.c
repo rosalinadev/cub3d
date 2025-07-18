@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 00:28:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/18 01:46:12 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 05:19:31 by vdunatte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ bool	load_sprites(t_assets *assets)
 
 	if (!assets->meta.sprite_frames)
 		return (eno(E_FRAMES), false);
-	assets->sprite = malloc(sizeof(t_frame) * assets->meta.sprite_frames);
+	assets->sprite = ft_calloc(assets->meta.sprite_frames, sizeof(t_frame));
 	if (!assets->sprite)
 		return (eno(E_MEM), false);
 	filename = assets->meta.sprite_dir + ft_strlen(assets->meta.sprite_dir);
@@ -110,5 +110,7 @@ bool	load_assets(t_assets *assets, bool is_bonus)
 			return (free_assets(assets), false);
 	if (is_bonus && !load_sprites(assets))
 		return (free_assets(assets), false);
+	assets->ceil = assets->meta.ceil.col;
+	assets->floor = assets->meta.floor.col;
 	return (true);
 }

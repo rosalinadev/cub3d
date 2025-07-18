@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 16:57:19 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/18 01:51:51 by vdunatte         ###   ########.fr       */
+/*   Updated: 2025/07/18 05:02:03 by vdunatte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,7 @@ static void	cleanup(t_ctx *ctx)
 }
 
 // TODO:
-//  - map loading:
-//   - parameter parsing
 //  - minimap (follows player if too big)
-
-//#define SPRITE_PATH "assets/blahaj/"
-#define SPRITE_PATH "assets/brick/"
 
 int	main(int argc, char *argv[])
 {
@@ -128,16 +123,6 @@ int	main(int argc, char *argv[])
 	player_respawn(&ctx.player, &ctx.map);
 	printf("player pos x:%f y:%f\n", ctx.player.pos.x, ctx.player.pos.y);
 	printf("player dir x:%f y:%f\n", ctx.player.dir.x, ctx.player.dir.y);
-	// ctx.assets.meta.path[A_W] = ft_strdup("assets/gradient.png");
-	// ctx.assets.meta.path[A_E] = ft_strdup("assets/cub3d_test.png");
-	// ctx.assets.meta.path[A_N] = ft_strdup("assets/checkerboard.png");
-	// ctx.assets.meta.path[A_S] = ft_strdup("assets/highres.png");
-	// ctx.assets.meta.path[A_DOOR] = ft_strdup("assets/edgetest.png");
-	// ctx.assets.meta.sprite_dir = ft_calloc(sizeof(SPRITE_PATH) + FRAME_SIZE, 1);
-	// ft_strlcat(ctx.assets.meta.sprite_dir, SPRITE_PATH, sizeof(SPRITE_PATH) + FRAME_SIZE);
-	// ctx.assets.meta.sprite_frames = 15;
-	ctx.assets.ceil = 0xFF808080;
-	ctx.assets.floor = 0xFF404040;
 	if (!load_assets(&ctx.assets, ctx.map.is_bonus))
 		return (err_p(1, "While loading assets"), cleanup(&ctx), EXIT_FAILURE);
 	printf("width:%u height:%u\n", ctx.map.size.x, ctx.map.size.y);

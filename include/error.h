@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 04:46:54 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/18 01:44:20 by rvandepu         ###   ########.fr       */
+/*   Updated: 2025/07/18 05:06:51 by vdunatte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ typedef enum e_eno
 	E_MAP_SPAWN,
 	E_MAP_SPAWNS,
 	E_MAP_WALLS,
+	E_META_IDENT,
+	E_META_DUPL,
+	E_META_COL_RANGE,
+	E_META_COL_FMT,
+	E_META_EOF,
 	E_FONT,
 	E_MLX,
 	E_SIZE,

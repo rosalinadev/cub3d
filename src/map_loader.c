@@ -6,7 +6,7 @@
 /*   By: rvandepu <rvandepu@student.42lehavre.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 15:49:44 by rvandepu          #+#    #+#             */
-/*   Updated: 2025/07/18 02:15:06 by vdunatte         ###   ########.fr       */
+/*   Updated: 2025/07/18 05:26:47 by vdunatte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ bool	load_map(const char *path, t_map *map, t_assets *assets)
 	map->assets = assets;
 	if (!parse_meta(fd, &assets->meta, map->is_bonus)
 		|| !read_map(map, fd, 0))
-		return (close(fd), free_gnl(), false);
+		return (free_assets(assets), close(fd), free_gnl(), false);
 	close(fd);
 	mem = ft_calloc(map->size.x * map->size.y, sizeof(*mem));
 	if (mem == NULL)

@@ -6,6 +6,8 @@ NO                        assets/cub3d_test.png
 D assets/edgetest.png
 SP 15 assets/brick/
 
+C 255,150,255
+F 111,255,111
             
 SO assets/checkerboard.png
 EA assets/highres.png
